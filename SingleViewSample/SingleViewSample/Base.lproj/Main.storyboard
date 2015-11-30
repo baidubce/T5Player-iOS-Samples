@@ -30,7 +30,7 @@
                                 <rect key="frame" x="113" y="355" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="playButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VVy-j3-JFB"/>
+                                    <action selector="click:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vmq-F4-dMq"/>
                                 </connections>
                             </button>
                         </subviews>

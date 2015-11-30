@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "DZVideoPlayerViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController {
+}
+- (IBAction)click:(id)sender;
 
 
 @end

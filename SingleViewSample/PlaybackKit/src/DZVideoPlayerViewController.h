@@ -20,17 +20,10 @@
 
 
 @interface DZVideoPlayerViewController : UIViewController
-@property (weak, nonatomic) id<DZVideoPlayerViewControllerDelegate> delegate;
-
-@property (strong, nonatomic) DZVideoPlayerViewControllerConfiguration *configuration;
-
-@property (strong, nonatomic) NSURL *videoURL;
 
 // Interface Builder Outlets
 @property (weak, nonatomic) IBOutlet DZPlayerView *playerView;
-
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIView *topToolbarView;
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
@@ -41,9 +34,30 @@
 @property (weak, nonatomic) IBOutlet UILabel *remainingTimeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenExpandButton;
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenShrinkButton;
-//
+
+@property (weak, nonatomic) id<DZVideoPlayerViewControllerDelegate> delegate;
+
+@property (strong, nonatomic) DZVideoPlayerViewControllerConfiguration *configuration;
+
+@property (strong, nonatomic) NSURL *videoURL;
 
 @end
+
+@interface DZVideoPlayerViewController (PlaybackKitActions)
+
+-  (void)setupActions;
+- (IBAction)play;
+- (IBAction)pause;
+- (IBAction)togglePlayPause;
+- (IBAction)seek:(UISlider *)slider;
+- (IBAction)startSeeking:(id)sender;
+- (IBAction)endSeeking:(id)sender;
+- (IBAction)onDoneButtonTouched;
+- (IBAction)toggleFullscreen:(id)sender;
+
+@end
+
+
 
 @interface DZVideoPlayerViewController (VideoEngine)
 
@@ -53,12 +67,15 @@
 @end
 
 
-@interface DZVideoPlayerViewController (RemoteControll)
+@interface DZVideoPlayerViewController (LockScreenControl)
 
 - (void)setupRemoteControlEvents;
 - (void)setupRemoteCommandCenter;
 - (void)resignRemoteCommandCenter;
 - (void)remoteControlReceivedWithEvent:(UIEvent *)event;
+- (void)updateNowPlayingInfo;
+- (void)resetNowPlayingInfo;
+- (NSMutableDictionary *)gatherNowPlayingInfo;
 
 @end
 
@@ -71,7 +88,6 @@
 
 @end
 
-
 // Readonly Playback properties
 @interface DZVideoPlayerViewController (PlaybackStatus)
 
@@ -79,21 +95,6 @@
 @property (readonly, nonatomic) NSTimeInterval availableDuration;
 @property (readonly, nonatomic) BOOL isPlaying;
 @property (readonly, nonatomic) BOOL isFullscreen;
-
-@end
-
-
-@interface DZVideoPlayerViewController (PlaybackKitActions)
-
-- (void)setupActions;
-- (void)play;
-- (void)pause;
-- (void)togglePlayPause;
-- (void)seek:(UISlider *)slider;
-- (void)startSeeking:(id)sender;
-- (void)endSeeking:(id)sender;
-- (void)onDoneButtonTouched;
-- (void)toggleFullscreen:(id)sender;
 
 @end
 
@@ -107,18 +108,21 @@
 @end
 
 
-@interface DZVideoPlayerViewController (PlaybackAPI)
+@interface DZVideoPlayerViewController (PlaybackKitAutoHide)
 
-- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
-- (void)stop;
-- (void)syncUI;
 - (void)startIdleCountdown;
 - (void)stopIdleCountdown;
 - (void)hideControls;
 - (void)showControls;
-- (void)updateNowPlayingInfo;
-- (void)resetNowPlayingInfo;
-- (NSMutableDictionary *)gatherNowPlayingInfo;
+
+@end
+
+
+@interface DZVideoPlayerViewController (PlaybackAPI)
+
+- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
+- (void)stop;
+
 @end
 
 @interface DZVideoPlayerViewController (NotificationHandle)

@@ -36,8 +36,9 @@ static const NSString *PlayerStatusContext;
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)time;
 
-@end
+- (void)syncUI;
 
+@end
 
 
 
@@ -116,35 +117,61 @@ static const NSString *PlayerStatusContext;
     return YES;
 }
 
+#pragma mark - Kit Management
+
+- (void)syncUI {
+    if ([self isPlaying]) {
+        self.playButton.hidden = YES;
+        self.playButton.enabled = NO;
+        
+        self.pauseButton.hidden = NO;
+        self.pauseButton.enabled = YES;
+    }
+    else {
+        self.playButton.hidden = NO;
+        self.playButton.enabled = YES;
+        
+        self.pauseButton.hidden = YES;
+        self.pauseButton.enabled = NO;
+    }
+    
+    if (self.configuration.isShowFullscreenExpandAndShrinkButtonsEnabled) {
+        if (self.isFullscreen) {
+            self.fullscreenExpandButton.hidden = YES;
+            self.fullscreenExpandButton.enabled = NO;
+            
+            self.fullscreenShrinkButton.hidden = NO;
+            self.fullscreenShrinkButton.enabled = YES;
+        }
+        else {
+            self.fullscreenExpandButton.hidden = NO;
+            self.fullscreenExpandButton.enabled = YES;
+            
+            self.fullscreenShrinkButton.hidden = YES;
+            self.fullscreenShrinkButton.enabled = NO;
+        }
+    }
+    else {
+        self.fullscreenExpandButton.hidden = YES;
+        self.fullscreenExpandButton.enabled = NO;
+        
+        self.fullscreenShrinkButton.hidden = YES;
+        self.fullscreenShrinkButton.enabled = NO;
+    }
+    
+}
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 }
 
-#pragma mark - Private Setup and Teardown Method
-
 - (void)resignKVO {
     [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
     [self.player removeObserver:self forKeyPath:@"rate" context:&PlayerRateContext];
     [self.player removeObserver:self forKeyPath:@"status" context:&PlayerStatusContext];
-}
-
-#pragma mark - Helpers
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)time {
-    NSString *string = [NSString stringWithFormat:@"%02li:%02li:%02li",
-                        lround(floor(time / 3600.)) % 100,
-                        lround(floor(time / 60.)) % 60,
-                        lround(floor(time)) % 60];
-    
-    NSString *extraZeroes = @"00:";
-    
-    if ([string hasPrefix:extraZeroes]) {
-        string = [string substringFromIndex:extraZeroes.length];
-    }
-    
-    return string;
 }
 
 #pragma mark - KVO
@@ -180,6 +207,24 @@ static const NSString *PlayerStatusContext;
     }
 }
 
+#pragma mark - Helpers
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)time {
+    NSString *string = [NSString stringWithFormat:@"%02li:%02li:%02li",
+                        lround(floor(time / 3600.)) % 100,
+                        lround(floor(time / 60.)) % 60,
+                        lround(floor(time)) % 60];
+    
+    NSString *extraZeroes = @"00:";
+    
+    if ([string hasPrefix:extraZeroes]) {
+        string = [string substringFromIndex:extraZeroes.length];
+    }
+    
+    return string;
+}
+
+
 @end
 
 
@@ -193,6 +238,7 @@ static const NSString *PlayerStatusContext;
     
     [self.player addObserver:self forKeyPath:@"status"
                      options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:&PlayerStatusContext];
+
     [self setupPlaybackProgress];
     
     self.playerView.player = self.player;
@@ -235,7 +281,7 @@ static const NSString *PlayerStatusContext;
 
 #pragma mark - Remote Control Events
 
-@implementation DZVideoPlayerViewController (RemoteControll)
+@implementation DZVideoPlayerViewController (LockScreenControl)
 
 - (void)setupRemoteControlEvents {
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -280,12 +326,32 @@ static const NSString *PlayerStatusContext;
     }
 }
 
+- (void)updateNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
+}
+
+- (void)resetNowPlayingInfo {
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+}
+
+- (NSMutableDictionary *)gatherNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [self onGatherNowPlayingInfo:nowPlayingInfo];
+    return nowPlayingInfo;
+}
+
 @end
 
 
 @implementation DZVideoPlayerViewController (PlaybackKitActions)
 - (void)setupActions {
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControls)];
+    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc]
+                                     initWithTarget:self
+                                     action:@selector(toggleControls)];
+    
     [self.playerView addGestureRecognizer:tapGR];
     
     [self.playButton addTarget:self
@@ -303,7 +369,7 @@ static const NSString *PlayerStatusContext;
     [self.fullscreenExpandButton addTarget:self
                                     action:@selector(toggleFullscreen:)
                           forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.progressIndicator addTarget:self
                                action:@selector(seek:)
                      forControlEvents:UIControlEventValueChanged];
@@ -315,13 +381,14 @@ static const NSString *PlayerStatusContext;
     [self.progressIndicator addTarget:self
                                action:@selector(endSeeking:)
                      forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
-    
+
     [self.doneButton addTarget:self
                         action:@selector(onDoneButtonTouched)
               forControlEvents:UIControlEventTouchUpInside];
+
 }
 
-- (void)play {
+- (IBAction)play {
     [self.player play];
     [self startIdleCountdown];
     [self syncUI];
@@ -329,7 +396,7 @@ static const NSString *PlayerStatusContext;
     [self updateNowPlayingInfo];
 }
 
-- (void)pause {
+- (IBAction)pause {
     [self.player pause];
     [self stopIdleCountdown];
     [self syncUI];
@@ -337,7 +404,7 @@ static const NSString *PlayerStatusContext;
     [self updateNowPlayingInfo];
 }
 
-- (void)togglePlayPause {
+- (IBAction)togglePlayPause {
     if ([self isPlaying]) {
         [self pause];
     }
@@ -346,29 +413,29 @@ static const NSString *PlayerStatusContext;
     }
 }
 
-- (void)seek:(UISlider *)slider {
+- (IBAction)seek:(UISlider *)slider {
     int timescale = self.playerItem.asset.duration.timescale;
     float time = slider.value * (self.playerItem.asset.duration.value / timescale);
     [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
 }
 
-- (void)startSeeking:(id)sender {
+- (IBAction)startSeeking:(id)sender {
     [self stopIdleCountdown];
     self.isSeeking = YES;
 }
 
-- (void)endSeeking:(id)sender {
+- (IBAction)endSeeking:(id)sender {
     [self startIdleCountdown];
     self.isSeeking = NO;
 }
 
-- (void)onDoneButtonTouched {
+- (IBAction)onDoneButtonTouched {
     if ([self.delegate respondsToSelector:@selector(playerDoneButtonTouched)]) {
         [self.delegate playerDoneButtonTouched];
     }
 }
 
-- (void)toggleFullscreen:(id)sender {
+- (IBAction)toggleFullscreen:(id)sender {
     _isFullscreen = !_isFullscreen;
     [self onToggleFullscreen];
     [self syncUI];
@@ -677,6 +744,62 @@ static const NSString *PlayerStatusContext;
 @end
 
 
+@implementation DZVideoPlayerViewController (PlaybackKitAutoHide)
+
+- (void)startIdleCountdown {
+    if (self.idleTimer) {
+        [self.idleTimer invalidate];
+    }
+    if (self.configuration.isHideControlsOnIdleEnabled) {
+        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.delayBeforeHidingViewsOnIdle
+                                                          target:self
+                                                        selector:@selector(hideControls)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    }
+}
+
+- (void)stopIdleCountdown {
+    if (self.idleTimer) {
+        [self.idleTimer invalidate];
+        self.idleTimer = nil;
+    }
+}
+
+- (void)hideControls {
+    NSArray *views = self.configuration.viewsToHideOnIdle;
+    [UIView animateWithDuration:0.3f animations:^{
+        for (UIView *view in views) {
+            view.alpha = 0.0;
+        }
+    }];
+    self.isControlsHidden = YES;
+}
+
+- (void)showControls {
+    NSArray *views = self.configuration.viewsToHideOnIdle;
+    [UIView animateWithDuration:0.3f animations:^{
+        for (UIView *view in views) {
+            view.alpha = 1.0;
+        }
+    }];
+    self.isControlsHidden = NO;
+}
+
+- (void)toggleControls {
+    if (self.isControlsHidden) {
+        [self showControls];
+    }
+    else {
+        [self hideControls];
+    }
+    [self stopIdleCountdown];
+}
+
+
+@end
+
+
 @implementation DZVideoPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
@@ -731,110 +854,5 @@ static const NSString *PlayerStatusContext;
     [self updateNowPlayingInfo];
 }
 
-- (void)syncUI {
-    if ([self isPlaying]) {
-        self.playButton.hidden = YES;
-        self.playButton.enabled = NO;
-        
-        self.pauseButton.hidden = NO;
-        self.pauseButton.enabled = YES;
-    }
-    else {
-        self.playButton.hidden = NO;
-        self.playButton.enabled = YES;
-        
-        self.pauseButton.hidden = YES;
-        self.pauseButton.enabled = NO;
-    }
-    
-    if (self.configuration.isShowFullscreenExpandAndShrinkButtonsEnabled) {
-        if (self.isFullscreen) {
-            self.fullscreenExpandButton.hidden = YES;
-            self.fullscreenExpandButton.enabled = NO;
-            
-            self.fullscreenShrinkButton.hidden = NO;
-            self.fullscreenShrinkButton.enabled = YES;
-        }
-        else {
-            self.fullscreenExpandButton.hidden = NO;
-            self.fullscreenExpandButton.enabled = YES;
-            
-            self.fullscreenShrinkButton.hidden = YES;
-            self.fullscreenShrinkButton.enabled = NO;
-        }
-    }
-    else {
-        self.fullscreenExpandButton.hidden = YES;
-        self.fullscreenExpandButton.enabled = NO;
-        
-        self.fullscreenShrinkButton.hidden = YES;
-        self.fullscreenShrinkButton.enabled = NO;
-    }
-    
-}
-
-- (void)startIdleCountdown {
-    if (self.idleTimer) {
-        [self.idleTimer invalidate];
-    }
-    if (self.configuration.isHideControlsOnIdleEnabled) {
-        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.delayBeforeHidingViewsOnIdle
-                                                          target:self selector:@selector(hideControls)
-                                                        userInfo:nil repeats:NO];
-    }
-}
-
-- (void)stopIdleCountdown {
-    if (self.idleTimer) {
-        [self.idleTimer invalidate];
-    }
-}
-
-- (void)hideControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
-    [UIView animateWithDuration:0.3f animations:^{
-        for (UIView *view in views) {
-            view.alpha = 0.0;
-        }
-    }];
-    self.isControlsHidden = YES;
-}
-
-- (void)showControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
-    [UIView animateWithDuration:0.3f animations:^{
-        for (UIView *view in views) {
-            view.alpha = 1.0;
-        }
-    }];
-    self.isControlsHidden = NO;
-}
-
-- (void)toggleControls {
-    if (self.isControlsHidden) {
-        [self showControls];
-    }
-    else {
-        [self hideControls];
-    }
-    [self stopIdleCountdown];
-}
-
-- (void)updateNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
-}
-
-- (void)resetNowPlayingInfo {
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
-}
-
-- (NSMutableDictionary *)gatherNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
-    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-    [self onGatherNowPlayingInfo:nowPlayingInfo];
-    return nowPlayingInfo;
-}
 
 @end

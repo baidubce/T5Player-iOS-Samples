@@ -37,9 +37,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)playButton:(id)sender {
+- (IBAction)click:(id)sender {
 }
-
 @end
 
 
