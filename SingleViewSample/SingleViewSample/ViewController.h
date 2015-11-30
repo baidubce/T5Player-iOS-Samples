@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DZVideoPlayerViewController.h"
 
 @interface ViewController : UIViewController
 
 
+@end
+
+
+@interface ViewController (ControllerDelegate) <DZVideoPlayerViewControllerDelegate>
 @end
 
