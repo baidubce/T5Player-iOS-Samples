@@ -14,7 +14,6 @@ static const NSString *PlayerStatusContext;
 
 @interface DZVideoPlayerViewController ()
 {
-    BOOL _isFullscreen;
 }
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) AVPlayerItem *playerItem;
@@ -33,7 +32,12 @@ static const NSString *PlayerStatusContext;
 
 @end
 
+
+
+
 @implementation DZVideoPlayerViewController
+
+@synthesize isFullscreen = _isFullscreen;
 
 + (NSBundle *)bundle {
     NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle]
@@ -184,249 +188,6 @@ static const NSString *PlayerStatusContext;
 
 
 #pragma mark - Public Actions
-
-- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
-    
-    [self.activityIndicatorView startAnimating];
-    
-    if (self.player) {
-        [self stop];
-    }
-    
-    if (self.playerItem) {
-        [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
-    }
-    
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.videoURL options:nil];
-    NSString *playableKey = @"playable";
-    
-    [asset loadValuesAsynchronouslyForKeys:@[playableKey] completionHandler:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSError *error;
-            AVKeyValueStatus status = [asset statusOfValueForKey:playableKey error:&error];
-            
-            if (status == AVKeyValueStatusLoaded) {
-                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                // ensure that this is done before the playerItem is associated with the player
-                [self.playerItem addObserver:self forKeyPath:@"status"
-                                     options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew
-                                     context:&ItemStatusContext];
-                
-                [self.player replaceCurrentItemWithPlayerItem:self.playerItem];
-                
-                if (playAutomatically) {
-                    [self play];
-                }
-            }
-            else {
-                // You should deal with the error appropriately.
-                NSLog(@"Error, the asset is not playable: %@", error);
-                [self onFailedToLoadAssetWithError:error];
-            }
-        });
-        
-    }];
-}
-
-- (void)play {
-    [self.player play];
-    [self startIdleCountdown];
-    [self syncUI];
-    [self onPlay];
-    [self updateNowPlayingInfo];
-}
-
-- (void)pause {
-    [self.player pause];
-    [self stopIdleCountdown];
-    [self syncUI];
-    [self onPause];
-    [self updateNowPlayingInfo];
-}
-
-- (void)togglePlayPause {
-    if ([self isPlaying]) {
-        [self pause];
-    }
-    else {
-        [self play];
-    }
-}
-
-- (void)stop {
-    [self.player pause];
-    [self.player seekToTime:kCMTimeZero];
-    [self stopIdleCountdown];
-    [self syncUI];
-    [self onStop];
-    [self updateNowPlayingInfo];
-}
-
-- (void)syncUI {
-    if ([self isPlaying]) {
-        self.playButton.hidden = YES;
-        self.playButton.enabled = NO;
-        
-        self.pauseButton.hidden = NO;
-        self.pauseButton.enabled = YES;
-    }
-    else {
-        self.playButton.hidden = NO;
-        self.playButton.enabled = YES;
-        
-        self.pauseButton.hidden = YES;
-        self.pauseButton.enabled = NO;
-    }
-    
-    if (self.configuration.isShowFullscreenExpandAndShrinkButtonsEnabled) {
-        if (self.isFullscreen) {
-            self.fullscreenExpandButton.hidden = YES;
-            self.fullscreenExpandButton.enabled = NO;
-            
-            self.fullscreenShrinkButton.hidden = NO;
-            self.fullscreenShrinkButton.enabled = YES;
-        }
-        else {
-            self.fullscreenExpandButton.hidden = NO;
-            self.fullscreenExpandButton.enabled = YES;
-            
-            self.fullscreenShrinkButton.hidden = YES;
-            self.fullscreenShrinkButton.enabled = NO;
-        }
-    }
-    else {
-        self.fullscreenExpandButton.hidden = YES;
-        self.fullscreenExpandButton.enabled = NO;
-        
-        self.fullscreenShrinkButton.hidden = YES;
-        self.fullscreenShrinkButton.enabled = NO;
-    }
-    
-}
-
-- (void)toggleFullscreen:(id)sender {
-    _isFullscreen = !_isFullscreen;
-    [self onToggleFullscreen];
-    [self syncUI];
-    [self startIdleCountdown];
-}
-
-- (void)seek:(UISlider *)slider {
-    int timescale = self.playerItem.asset.duration.timescale;
-    float time = slider.value * (self.playerItem.asset.duration.value / timescale);
-    [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
-}
-
-- (void)startSeeking:(id)sender {
-    [self stopIdleCountdown];
-    self.isSeeking = YES;
-}
-
-- (void)endSeeking:(id)sender {
-    [self startIdleCountdown];
-    self.isSeeking = NO;
-}
-
-- (void)updateProgressIndicator:(id)sender {
-    CGFloat duration = CMTimeGetSeconds(self.playerItem.asset.duration);
-    
-    if (duration == 0 || isnan(duration)) {
-        // Video is a live stream
-        self.progressIndicator.hidden = YES;
-        [self.currentTimeLabel setText:nil];
-        [self.remainingTimeLabel setText:nil];
-    }
-    else {
-        self.progressIndicator.hidden = NO;
-        
-        CGFloat current;
-        if (self.isSeeking) {
-            current = self.progressIndicator.value * duration;
-        }
-        else {
-            // Otherwise, use the actual video position
-            current = CMTimeGetSeconds(self.player.currentTime);
-        }
-        
-        CGFloat left = duration - current;
-        
-        [self.progressIndicator setValue:(current / duration)];
-        [self.progressIndicator setSecondaryValue:([self availableDuration] / duration)];
-        
-        // Set time labels
-        
-        NSString *currentTimeString = current > 0 ? [self stringFromTimeInterval:current] : @"00:00";
-        NSString *remainingTimeString = left > 0 ? [self stringFromTimeInterval:left] : @"00:00";
-        
-        [self.currentTimeLabel setText:currentTimeString];
-        [self.remainingTimeLabel setText:[NSString stringWithFormat:@"-%@", remainingTimeString]];
-        
-    }
-}
-
-- (void)startIdleCountdown {
-    if (self.idleTimer) {
-        [self.idleTimer invalidate];
-    }
-    if (self.configuration.isHideControlsOnIdleEnabled) {
-        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.delayBeforeHidingViewsOnIdle
-                                                          target:self selector:@selector(hideControls)
-                                                        userInfo:nil repeats:NO];
-    }
-}
-
-- (void)stopIdleCountdown {
-    if (self.idleTimer) {
-        [self.idleTimer invalidate];
-    }
-}
-
-- (void)hideControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
-    [UIView animateWithDuration:0.3f animations:^{
-        for (UIView *view in views) {
-            view.alpha = 0.0;
-        }
-    }];
-    self.isControlsHidden = YES;
-}
-
-- (void)showControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
-    [UIView animateWithDuration:0.3f animations:^{
-        for (UIView *view in views) {
-            view.alpha = 1.0;
-        }
-    }];
-    self.isControlsHidden = NO;
-}
-
-- (void)toggleControls {
-    if (self.isControlsHidden) {
-        [self showControls];
-    }
-    else {
-        [self hideControls];
-    }
-    [self stopIdleCountdown];
-}
-
-- (void)updateNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
-}
-
-- (void)resetNowPlayingInfo {
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
-}
-
-- (NSMutableDictionary *)gatherNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
-    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-    [self onGatherNowPlayingInfo:nowPlayingInfo];
-    return nowPlayingInfo;
-}
 
 #pragma mark - Private Actions
 
@@ -746,5 +507,253 @@ static const NSString *PlayerStatusContext;
         [self.delegate playerDoneButtonTouched];
     }
 }
+
+@end
+
+@implementation DZVideoPlayerViewController (PlaybackControl)
+
+- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
+    
+    [self.activityIndicatorView startAnimating];
+    
+    if (self.player) {
+        [self stop];
+    }
+    
+    if (self.playerItem) {
+        [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
+    }
+    
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.videoURL options:nil];
+    NSString *playableKey = @"playable";
+    
+    [asset loadValuesAsynchronouslyForKeys:@[playableKey] completionHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *error;
+            AVKeyValueStatus status = [asset statusOfValueForKey:playableKey error:&error];
+            
+            if (status == AVKeyValueStatusLoaded) {
+                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                // ensure that this is done before the playerItem is associated with the player
+                [self.playerItem addObserver:self forKeyPath:@"status"
+                                     options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew
+                                     context:&ItemStatusContext];
+                
+                [self.player replaceCurrentItemWithPlayerItem:self.playerItem];
+                
+                if (playAutomatically) {
+                    [self play];
+                }
+            }
+            else {
+                // You should deal with the error appropriately.
+                NSLog(@"Error, the asset is not playable: %@", error);
+                [self onFailedToLoadAssetWithError:error];
+            }
+        });
+        
+    }];
+}
+
+- (void)play {
+    [self.player play];
+    [self startIdleCountdown];
+    [self syncUI];
+    [self onPlay];
+    [self updateNowPlayingInfo];
+}
+
+- (void)pause {
+    [self.player pause];
+    [self stopIdleCountdown];
+    [self syncUI];
+    [self onPause];
+    [self updateNowPlayingInfo];
+}
+
+- (void)togglePlayPause {
+    if ([self isPlaying]) {
+        [self pause];
+    }
+    else {
+        [self play];
+    }
+}
+
+- (void)stop {
+    [self.player pause];
+    [self.player seekToTime:kCMTimeZero];
+    [self stopIdleCountdown];
+    [self syncUI];
+    [self onStop];
+    [self updateNowPlayingInfo];
+}
+
+- (void)syncUI {
+    if ([self isPlaying]) {
+        self.playButton.hidden = YES;
+        self.playButton.enabled = NO;
+        
+        self.pauseButton.hidden = NO;
+        self.pauseButton.enabled = YES;
+    }
+    else {
+        self.playButton.hidden = NO;
+        self.playButton.enabled = YES;
+        
+        self.pauseButton.hidden = YES;
+        self.pauseButton.enabled = NO;
+    }
+    
+    if (self.configuration.isShowFullscreenExpandAndShrinkButtonsEnabled) {
+        if (self.isFullscreen) {
+            self.fullscreenExpandButton.hidden = YES;
+            self.fullscreenExpandButton.enabled = NO;
+            
+            self.fullscreenShrinkButton.hidden = NO;
+            self.fullscreenShrinkButton.enabled = YES;
+        }
+        else {
+            self.fullscreenExpandButton.hidden = NO;
+            self.fullscreenExpandButton.enabled = YES;
+            
+            self.fullscreenShrinkButton.hidden = YES;
+            self.fullscreenShrinkButton.enabled = NO;
+        }
+    }
+    else {
+        self.fullscreenExpandButton.hidden = YES;
+        self.fullscreenExpandButton.enabled = NO;
+        
+        self.fullscreenShrinkButton.hidden = YES;
+        self.fullscreenShrinkButton.enabled = NO;
+    }
+    
+}
+
+- (void)toggleFullscreen:(id)sender {
+    _isFullscreen = !_isFullscreen;
+    [self onToggleFullscreen];
+    [self syncUI];
+    [self startIdleCountdown];
+}
+
+- (void)seek:(UISlider *)slider {
+    int timescale = self.playerItem.asset.duration.timescale;
+    float time = slider.value * (self.playerItem.asset.duration.value / timescale);
+    [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
+}
+
+- (void)startSeeking:(id)sender {
+    [self stopIdleCountdown];
+    self.isSeeking = YES;
+}
+
+- (void)endSeeking:(id)sender {
+    [self startIdleCountdown];
+    self.isSeeking = NO;
+}
+
+- (void)updateProgressIndicator:(id)sender {
+    CGFloat duration = CMTimeGetSeconds(self.playerItem.asset.duration);
+    
+    if (duration == 0 || isnan(duration)) {
+        // Video is a live stream
+        self.progressIndicator.hidden = YES;
+        [self.currentTimeLabel setText:nil];
+        [self.remainingTimeLabel setText:nil];
+    }
+    else {
+        self.progressIndicator.hidden = NO;
+        
+        CGFloat current;
+        if (self.isSeeking) {
+            current = self.progressIndicator.value * duration;
+        }
+        else {
+            // Otherwise, use the actual video position
+            current = CMTimeGetSeconds(self.player.currentTime);
+        }
+        
+        CGFloat left = duration - current;
+        
+        [self.progressIndicator setValue:(current / duration)];
+        [self.progressIndicator setSecondaryValue:([self availableDuration] / duration)];
+        
+        // Set time labels
+        
+        NSString *currentTimeString = current > 0 ? [self stringFromTimeInterval:current] : @"00:00";
+        NSString *remainingTimeString = left > 0 ? [self stringFromTimeInterval:left] : @"00:00";
+        
+        [self.currentTimeLabel setText:currentTimeString];
+        [self.remainingTimeLabel setText:[NSString stringWithFormat:@"-%@", remainingTimeString]];
+        
+    }
+}
+
+- (void)startIdleCountdown {
+    if (self.idleTimer) {
+        [self.idleTimer invalidate];
+    }
+    if (self.configuration.isHideControlsOnIdleEnabled) {
+        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.delayBeforeHidingViewsOnIdle
+                                                          target:self selector:@selector(hideControls)
+                                                        userInfo:nil repeats:NO];
+    }
+}
+
+- (void)stopIdleCountdown {
+    if (self.idleTimer) {
+        [self.idleTimer invalidate];
+    }
+}
+
+- (void)hideControls {
+    NSArray *views = self.configuration.viewsToHideOnIdle;
+    [UIView animateWithDuration:0.3f animations:^{
+        for (UIView *view in views) {
+            view.alpha = 0.0;
+        }
+    }];
+    self.isControlsHidden = YES;
+}
+
+- (void)showControls {
+    NSArray *views = self.configuration.viewsToHideOnIdle;
+    [UIView animateWithDuration:0.3f animations:^{
+        for (UIView *view in views) {
+            view.alpha = 1.0;
+        }
+    }];
+    self.isControlsHidden = NO;
+}
+
+- (void)toggleControls {
+    if (self.isControlsHidden) {
+        [self showControls];
+    }
+    else {
+        [self hideControls];
+    }
+    [self stopIdleCountdown];
+}
+
+- (void)updateNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
+}
+
+- (void)resetNowPlayingInfo {
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+}
+
+- (NSMutableDictionary *)gatherNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [self onGatherNowPlayingInfo:nowPlayingInfo];
+    return nowPlayingInfo;
+}
+
 
 @end

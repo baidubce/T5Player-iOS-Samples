@@ -53,6 +53,10 @@
 
 + (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style;
 
+@end
+
+@interface DZVideoPlayerViewController (PlaybackControl)
+
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
 
 - (void)play;

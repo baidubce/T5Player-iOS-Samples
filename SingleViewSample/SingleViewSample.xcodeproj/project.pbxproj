@@ -226,19 +226,19 @@
 			isa = PBXGroup;
 			children = (
 				02583AC31C0BFDC900649671 /* DZPlayerButton.h */,
+				02583ACB1C0BFDC900649671 /* DZPlayerButton.m */,
 				02583AC41C0BFDC900649671 /* DZPlayerView.h */,
+				02583ACC1C0BFDC900649671 /* DZPlayerView.m */,
 				02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */,
+				02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */,
 				02583AC61C0BFDC900649671 /* DZVideoPlayerViewController_constants.h */,
 				02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */,
-				02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */,
-				02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */,
-				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
-				02583ACB1C0BFDC900649671 /* DZPlayerButton.m */,
-				02583ACC1C0BFDC900649671 /* DZPlayerView.m */,
-				02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */,
 				02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */,
+				02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */,
 				02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */,
+				02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */,
 				02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */,
+				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
