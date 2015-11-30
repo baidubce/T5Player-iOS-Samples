@@ -14,13 +14,17 @@ static const NSString *PlayerStatusContext;
 
 @interface DZVideoPlayerViewController ()
 {
+    BOOL _isFullscreen;
 }
+
+#pragma mark - Player Engine properties
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) AVPlayerItem *playerItem;
+@property (assign, nonatomic) CGRect initialFrame;
 
 @property (assign, nonatomic) BOOL isSeeking;
 @property (assign, nonatomic) BOOL isControlsHidden;
-@property (assign, nonatomic) CGRect initialFrame;
+
 @property (strong, nonatomic) NSTimer *idleTimer;
 
 // Player time observer target
@@ -30,6 +34,8 @@ static const NSString *PlayerStatusContext;
 @property (strong, nonatomic) id playCommandTarget;
 @property (strong, nonatomic) id pauseCommandTarget;
 
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)time;
+
 @end
 
 
@@ -37,45 +43,7 @@ static const NSString *PlayerStatusContext;
 
 @implementation DZVideoPlayerViewController
 
-@synthesize isFullscreen = _isFullscreen;
-
-+ (NSBundle *)bundle {
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle]
-                                                 pathForResource:@"DZVideoPlayerViewController"
-                                                 ofType:@"bundle"]];
-    return bundle;
-}
-
-+ (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style {
-    NSString *nibName;
-    NSString *classString = NSStringFromClass([DZVideoPlayerViewController class]);
-    switch (style) {
-        case DZVideoPlayerViewControllerStyleDefault:
-            nibName = classString;
-            break;
-            
-        case DZVideoPlayerViewControllerStyleSimple:
-            nibName = [NSString stringWithFormat:@"%@_%@", classString, @"simple"];
-            break;
-            
-        default:
-            nibName = classString;
-            break;
-    }
-    return nibName;
-}
-
-+ (DZVideoPlayerViewControllerConfiguration *)defaultConfiguration {
-    DZVideoPlayerViewControllerConfiguration *configuration = [[DZVideoPlayerViewControllerConfiguration alloc] init];
-    configuration.viewsToHideOnIdle = [NSMutableArray new];
-    configuration.delayBeforeHidingViewsOnIdle = 3.0;
-    configuration.isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
-    configuration.isHideControlsOnIdleEnabled = YES;
-    configuration.isBackgroundPlaybackEnabled = YES;
-    return configuration;
-}
-
-#pragma mark - Lifecycle
+#pragma mark - ViewController Lifecycle Override
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -144,38 +112,6 @@ static const NSString *PlayerStatusContext;
     [self resetNowPlayingInfo];
 }
 
-#pragma mark - Properties
-
-- (NSTimeInterval)availableDuration {
-    NSTimeInterval result = 0;
-    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
-    
-    if ([loadedTimeRanges count] > 0) {
-        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
-        Float64 startSeconds = CMTimeGetSeconds(timeRange.start);
-        Float64 durationSeconds = CMTimeGetSeconds(timeRange.duration);
-        result = startSeconds + durationSeconds;
-    }
-    
-    return result;
-}
-
-- (NSTimeInterval)currentPlaybackTime {
-    CMTime time = self.player.currentTime;
-    if (CMTIME_IS_VALID(time)) {
-        return time.value / time.timescale;
-    }
-    return 0;
-}
-
-- (BOOL)isPlaying {
-    return [self.player rate] > 0.0f;
-}
-
-- (BOOL)isFullscreen {
-    return _isFullscreen;
-}
-
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
@@ -186,10 +122,68 @@ static const NSString *PlayerStatusContext;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 }
 
+#pragma mark - Private Setup and Teardown Method
 
-#pragma mark - Public Actions
+- (void)resignKVO {
+    [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
+    [self.player removeObserver:self forKeyPath:@"rate" context:&PlayerRateContext];
+    [self.player removeObserver:self forKeyPath:@"status" context:&PlayerStatusContext];
+}
 
-#pragma mark - Private Actions
+#pragma mark - Helpers
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)time {
+    NSString *string = [NSString stringWithFormat:@"%02li:%02li:%02li",
+                        lround(floor(time / 3600.)) % 100,
+                        lround(floor(time / 60.)) % 60,
+                        lround(floor(time)) % 60];
+    
+    NSString *extraZeroes = @"00:";
+    
+    if ([string hasPrefix:extraZeroes]) {
+        string = [string substringFromIndex:extraZeroes.length];
+    }
+    
+    return string;
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &ItemStatusContext) {
+//        AVPlayerItemStatus status = [change[NSKeyValueChangeNewKey] integerValue];
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self syncUI];
+                       });
+    }
+    else if (context == &PlayerRateContext) {
+        float rate = [change[NSKeyValueChangeNewKey] floatValue];
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           if (rate > 0) {
+                               [self.activityIndicatorView stopAnimating];
+                           }
+                       });
+        
+    }
+    else if (context == &PlayerStatusContext) {
+//        AVPlayerStatus status = [change[NSKeyValueChangeNewKey] integerValue];
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self syncUI];
+                       });
+    }
+    else {
+        // Make sure to call the superclass's implementation in the else block in case it is also implementing KVO
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+@end
+
+
+@implementation DZVideoPlayerViewController (VideoEngine)
 
 - (void)setupPlayer {
     self.player = [[AVPlayer alloc] initWithPlayerItem:nil];
@@ -245,32 +239,17 @@ static const NSString *PlayerStatusContext;
                                                object:audioSession];
 }
 
+
+@end
+
+
+#pragma mark - Remote Control Events
+
+@implementation DZVideoPlayerViewController (RemoteControll)
+
 - (void)setupRemoteControlEvents {
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
-}
-
-- (void)setupActions {
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControls)];
-    [self.playerView addGestureRecognizer:tapGR];
-    
-    [self.playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
-    [self.pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.fullscreenShrinkButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
-    [self.fullscreenExpandButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.progressIndicator addTarget:self action:@selector(seek:) forControlEvents:UIControlEventValueChanged];
-    [self.progressIndicator addTarget:self action:@selector(startSeeking:) forControlEvents:UIControlEventTouchDown];
-    [self.progressIndicator addTarget:self action:@selector(endSeeking:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
-    
-    [self.doneButton addTarget:self action:@selector(onDoneButtonTouched) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)resignKVO {
-    [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
-    [self.player removeObserver:self forKeyPath:@"rate" context:&PlayerRateContext];
-    [self.player removeObserver:self forKeyPath:@"status" context:&PlayerStatusContext];
 }
 
 - (void)setupRemoteCommandCenter {
@@ -294,49 +273,165 @@ static const NSString *PlayerStatusContext;
     self.pauseCommandTarget = nil;
 }
 
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    //if it is a remote control event handle it correctly
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
+            [self play];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
+            [self pause];
+        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self togglePlayPause];
+        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
+            [self onRequireNextTrack];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
+            [self onRequirePreviousTrack];
+        }
+    }
+}
+
+@end
+
+
+@implementation DZVideoPlayerViewController (KitConfiguration)
+
++ (NSBundle *)bundle {
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle]
+                                                 pathForResource:@"DZVideoPlayerViewController"
+                                                 ofType:@"bundle"]];
+    return bundle;
+}
+
++ (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style {
+    NSString *nibName;
+    NSString *classString = NSStringFromClass([DZVideoPlayerViewController class]);
+    switch (style) {
+        case DZVideoPlayerViewControllerStyleDefault:
+            nibName = classString;
+            break;
+            
+        case DZVideoPlayerViewControllerStyleSimple:
+            nibName = [NSString stringWithFormat:@"%@_%@", classString, @"simple"];
+            break;
+            
+        default:
+            nibName = classString;
+            break;
+    }
+    return nibName;
+}
+
++ (DZVideoPlayerViewControllerConfiguration *)defaultConfiguration {
+    DZVideoPlayerViewControllerConfiguration *configuration = [[DZVideoPlayerViewControllerConfiguration alloc] init];
+    configuration.viewsToHideOnIdle = [NSMutableArray new];
+    configuration.delayBeforeHidingViewsOnIdle = 3.0;
+    configuration.isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
+    configuration.isHideControlsOnIdleEnabled = YES;
+    configuration.isBackgroundPlaybackEnabled = YES;
+    return configuration;
+}
+
+- (void)setupActions {
+    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControls)];
+    [self.playerView addGestureRecognizer:tapGR];
+    
+    [self.playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
+    [self.pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.fullscreenShrinkButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
+    [self.fullscreenExpandButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.progressIndicator addTarget:self action:@selector(seek:) forControlEvents:UIControlEventValueChanged];
+    [self.progressIndicator addTarget:self action:@selector(startSeeking:) forControlEvents:UIControlEventTouchDown];
+    [self.progressIndicator addTarget:self action:@selector(endSeeking:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    
+    [self.doneButton addTarget:self action:@selector(onDoneButtonTouched) forControlEvents:UIControlEventTouchUpInside];
+}
+
+@end
+
+
+@implementation DZVideoPlayerViewController (PlaybackStatus)
+
+- (NSTimeInterval)availableDuration {
+    NSTimeInterval result = 0;
+    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
+    
+    if ([loadedTimeRanges count] > 0) {
+        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+        Float64 startSeconds = CMTimeGetSeconds(timeRange.start);
+        Float64 durationSeconds = CMTimeGetSeconds(timeRange.duration);
+        result = startSeconds + durationSeconds;
+    }
+    
+    return result;
+}
+
+- (NSTimeInterval)currentPlaybackTime {
+    CMTime time = self.player.currentTime;
+    if (CMTIME_IS_VALID(time)) {
+        return time.value / time.timescale;
+    }
+    return 0;
+}
+
+- (BOOL)isPlaying {
+    return [self.player rate] > 0.0f;
+}
+
+- (BOOL)isFullscreen {
+    return _isFullscreen;
+}
+
+
+@end
+
+
+@implementation DZVideoPlayerViewController (NotificationHandle)
 - (void)setupNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAVPlayerItemDidPlayToEndTime:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleAVPlayerItemDidPlayToEndTime:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAVPlayerItemFailedToPlayToEndTime:)
-                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleAVPlayerItemFailedToPlayToEndTime:)
+                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAVPlayerItemPlaybackStalled:)
-                                                 name:AVPlayerItemPlaybackStalledNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleAVPlayerItemPlaybackStalled:)
+                                                 name:AVPlayerItemPlaybackStalledNotification
+                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationDidEnterBackground:)
-                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleApplicationDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationDidBecomeActive:)
-                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleApplicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
 }
 
 - (void)resignNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemFailedToPlayToEndTimeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemPlaybackStalledNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemPlaybackStalledNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidEnterBackgroundNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
 }
-
-#pragma mark - Helpers
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)time {
-    NSString *string = [NSString stringWithFormat:@"%02li:%02li:%02li",
-                        lround(floor(time / 3600.)) % 100,
-                        lround(floor(time / 60.)) % 60,
-                        lround(floor(time)) % 60];
-    
-    NSString *extraZeroes = @"00:";
-    
-    if ([string hasPrefix:extraZeroes]) {
-        string = [string substringFromIndex:extraZeroes.length];
-    }
-    
-    return string;
-}
-
-#pragma mark - Notification Handlers
 
 - (void)handleAVPlayerItemDidPlayToEndTime:(NSNotification *)notification {
     [self stop];
@@ -382,59 +477,10 @@ static const NSString *PlayerStatusContext;
     
 }
 
-#pragma mark - Remote Control Events
+@end
 
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    //if it is a remote control event handle it correctly
-    if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
-            [self play];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
-            [self pause];
-        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            [self togglePlayPause];
-        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            [self onRequireNextTrack];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            [self onRequirePreviousTrack];
-        }
-    }
-}
 
-#pragma mark - KVO
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == &ItemStatusContext) {
-//        AVPlayerItemStatus status = [change[NSKeyValueChangeNewKey] integerValue];
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self syncUI];
-                       });
-    }
-    else if (context == &PlayerRateContext) {
-        float rate = [change[NSKeyValueChangeNewKey] floatValue];
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           if (rate > 0) {
-                               [self.activityIndicatorView stopAnimating];
-                           }
-                       });
-        
-    }
-    else if (context == &PlayerStatusContext) {
-//        AVPlayerStatus status = [change[NSKeyValueChangeNewKey] integerValue];
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self syncUI];
-                       });
-    }
-    else {
-        // Make sure to call the superclass's implementation in the else block in case it is also implementing KVO
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
-#pragma mark - Delegate invocations
+@implementation DZVideoPlayerViewController (DelegateInvocation)
 
 - (void)onFailedToLoadAssetWithError:(NSError*)error {
     if ([self.delegate respondsToSelector:@selector(playerFailedToLoadAssetWithError:)]) {
@@ -510,7 +556,9 @@ static const NSString *PlayerStatusContext;
 
 @end
 
-@implementation DZVideoPlayerViewController (PlaybackControl)
+
+
+@implementation DZVideoPlayerViewController (PlaybackCommands)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
     
@@ -754,6 +802,5 @@ static const NSString *PlayerStatusContext;
     [self onGatherNowPlayingInfo:nowPlayingInfo];
     return nowPlayingInfo;
 }
-
 
 @end
