@@ -48,7 +48,6 @@
 @interface DZVideoPlayerViewController (VideoEngine)
 
 - (void)setupPlayer;
-- (void)resignPlayer;
 - (void)setupAudioSession;
 
 @end
@@ -69,7 +68,6 @@
 + (NSBundle*)bundle;
 + (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style;
 + (DZVideoPlayerViewControllerConfiguration *)defaultConfiguration;
-- (void)setupActions;
 
 @end
 
@@ -85,19 +83,35 @@
 @end
 
 
-@interface DZVideoPlayerViewController (PlaybackCommands)
+@interface DZVideoPlayerViewController (PlaybackKitActions)
 
-- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
+- (void)setupActions;
 - (void)play;
 - (void)pause;
 - (void)togglePlayPause;
-- (void)stop;
-- (void)syncUI;
-- (void)toggleFullscreen:(id)sender;
 - (void)seek:(UISlider *)slider;
 - (void)startSeeking:(id)sender;
 - (void)endSeeking:(id)sender;
+- (void)onDoneButtonTouched;
+- (void)toggleFullscreen:(id)sender;
+
+@end
+
+
+@interface DZVideoPlayerViewController (PlaybackProgroess)
+
+- (void)setupPlaybackProgress;
+- (void)resignPlaybackProgress;
 - (void)updateProgressIndicator:(id)sender;
+
+@end
+
+
+@interface DZVideoPlayerViewController (PlaybackAPI)
+
+- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
+- (void)stop;
+- (void)syncUI;
 - (void)startIdleCountdown;
 - (void)stopIdleCountdown;
 - (void)hideControls;
@@ -137,6 +151,5 @@
 - (void)onToggleFullscreen;
 - (void)onPlaybackStalled;
 - (void)onGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo;
-- (void)onDoneButtonTouched;
 
 @end

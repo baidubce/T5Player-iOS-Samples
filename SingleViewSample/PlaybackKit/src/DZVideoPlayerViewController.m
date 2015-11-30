@@ -108,7 +108,7 @@ static const NSString *PlayerStatusContext;
     [self resignNotifications];
     [self resignKVO];
     [self resignRemoteCommandCenter];
-    [self resignPlayer];
+    [self resignPlaybackProgress];
     [self resetNowPlayingInfo];
 }
 
@@ -193,21 +193,11 @@ static const NSString *PlayerStatusContext;
     
     [self.player addObserver:self forKeyPath:@"status"
                      options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:&PlayerStatusContext];
-    
-    DZVideoPlayerViewController __weak *welf = self;
-    self.playerTimeObservationTarget = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
-        [welf updateProgressIndicator:welf];
-        [welf syncUI];
-    }];
+    [self setupPlaybackProgress];
     
     self.playerView.player = self.player;
     self.playerView.videoFillMode = AVLayerVideoGravityResizeAspect;
     
-}
-
-- (void)resignPlayer {
-    [self.player removeTimeObserver:self.playerTimeObservationTarget];
-    self.playerTimeObservationTarget = nil;
 }
 
 - (void)setupAudioSession {
@@ -293,6 +283,101 @@ static const NSString *PlayerStatusContext;
 @end
 
 
+@implementation DZVideoPlayerViewController (PlaybackKitActions)
+- (void)setupActions {
+    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControls)];
+    [self.playerView addGestureRecognizer:tapGR];
+    
+    [self.playButton addTarget:self
+                        action:@selector(play)
+              forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.pauseButton addTarget:self
+                         action:@selector(pause)
+               forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.fullscreenShrinkButton addTarget:self
+                                    action:@selector(toggleFullscreen:)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.fullscreenExpandButton addTarget:self
+                                    action:@selector(toggleFullscreen:)
+                          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.progressIndicator addTarget:self
+                               action:@selector(seek:)
+                     forControlEvents:UIControlEventValueChanged];
+    
+    [self.progressIndicator addTarget:self
+                               action:@selector(startSeeking:)
+                     forControlEvents:UIControlEventTouchDown];
+    
+    [self.progressIndicator addTarget:self
+                               action:@selector(endSeeking:)
+                     forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
+    
+    [self.doneButton addTarget:self
+                        action:@selector(onDoneButtonTouched)
+              forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)play {
+    [self.player play];
+    [self startIdleCountdown];
+    [self syncUI];
+    [self onPlay];
+    [self updateNowPlayingInfo];
+}
+
+- (void)pause {
+    [self.player pause];
+    [self stopIdleCountdown];
+    [self syncUI];
+    [self onPause];
+    [self updateNowPlayingInfo];
+}
+
+- (void)togglePlayPause {
+    if ([self isPlaying]) {
+        [self pause];
+    }
+    else {
+        [self play];
+    }
+}
+
+- (void)seek:(UISlider *)slider {
+    int timescale = self.playerItem.asset.duration.timescale;
+    float time = slider.value * (self.playerItem.asset.duration.value / timescale);
+    [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
+}
+
+- (void)startSeeking:(id)sender {
+    [self stopIdleCountdown];
+    self.isSeeking = YES;
+}
+
+- (void)endSeeking:(id)sender {
+    [self startIdleCountdown];
+    self.isSeeking = NO;
+}
+
+- (void)onDoneButtonTouched {
+    if ([self.delegate respondsToSelector:@selector(playerDoneButtonTouched)]) {
+        [self.delegate playerDoneButtonTouched];
+    }
+}
+
+- (void)toggleFullscreen:(id)sender {
+    _isFullscreen = !_isFullscreen;
+    [self onToggleFullscreen];
+    [self syncUI];
+    [self startIdleCountdown];
+}
+
+@end
+
+
 @implementation DZVideoPlayerViewController (KitConfiguration)
 
 + (NSBundle *)bundle {
@@ -331,22 +416,6 @@ static const NSString *PlayerStatusContext;
     return configuration;
 }
 
-- (void)setupActions {
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControls)];
-    [self.playerView addGestureRecognizer:tapGR];
-    
-    [self.playButton addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
-    [self.pauseButton addTarget:self action:@selector(pause) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.fullscreenShrinkButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
-    [self.fullscreenExpandButton addTarget:self action:@selector(toggleFullscreen:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.progressIndicator addTarget:self action:@selector(seek:) forControlEvents:UIControlEventValueChanged];
-    [self.progressIndicator addTarget:self action:@selector(startSeeking:) forControlEvents:UIControlEventTouchDown];
-    [self.progressIndicator addTarget:self action:@selector(endSeeking:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
-    
-    [self.doneButton addTarget:self action:@selector(onDoneButtonTouched) forControlEvents:UIControlEventTouchUpInside];
-}
 
 @end
 
@@ -548,17 +617,67 @@ static const NSString *PlayerStatusContext;
     }
 }
 
-- (void)onDoneButtonTouched {
-    if ([self.delegate respondsToSelector:@selector(playerDoneButtonTouched)]) {
-        [self.delegate playerDoneButtonTouched];
+@end
+
+
+
+@implementation DZVideoPlayerViewController (PlaybackProgroess)
+
+- (void)updateProgressIndicator:(id)sender {
+    CGFloat duration = CMTimeGetSeconds(self.playerItem.asset.duration);
+    
+    if (duration == 0 || isnan(duration)) {
+        // Video is a live stream
+        self.progressIndicator.hidden = YES;
+        [self.currentTimeLabel setText:nil];
+        [self.remainingTimeLabel setText:nil];
     }
+    else {
+        self.progressIndicator.hidden = NO;
+        
+        CGFloat current;
+        if (self.isSeeking) {
+            current = self.progressIndicator.value * duration;
+        }
+        else {
+            // Otherwise, use the actual video position
+            current = CMTimeGetSeconds(self.player.currentTime);
+        }
+        
+        CGFloat left = duration - current;
+        
+        [self.progressIndicator setValue:(current / duration)];
+        [self.progressIndicator setSecondaryValue:([self availableDuration] / duration)];
+        
+        // Set time labels
+        
+        NSString *currentTimeString = current > 0 ? [self stringFromTimeInterval:current] : @"00:00";
+        NSString *remainingTimeString = left > 0 ? [self stringFromTimeInterval:left] : @"00:00";
+        
+        [self.currentTimeLabel setText:currentTimeString];
+        [self.remainingTimeLabel setText:[NSString stringWithFormat:@"-%@", remainingTimeString]];
+        
+    }
+}
+
+- (void)setupPlaybackProgress {
+    DZVideoPlayerViewController __weak *welf = self;
+    self.playerTimeObservationTarget = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
+        [welf updateProgressIndicator:welf];
+        [welf syncUI];
+    }];
+    
+}
+
+- (void)resignPlaybackProgress {
+    [self.player removeTimeObserver:self.playerTimeObservationTarget];
+    self.playerTimeObservationTarget = nil;
 }
 
 @end
 
 
-
-@implementation DZVideoPlayerViewController (PlaybackCommands)
+@implementation DZVideoPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
     
@@ -601,31 +720,6 @@ static const NSString *PlayerStatusContext;
         });
         
     }];
-}
-
-- (void)play {
-    [self.player play];
-    [self startIdleCountdown];
-    [self syncUI];
-    [self onPlay];
-    [self updateNowPlayingInfo];
-}
-
-- (void)pause {
-    [self.player pause];
-    [self stopIdleCountdown];
-    [self syncUI];
-    [self onPause];
-    [self updateNowPlayingInfo];
-}
-
-- (void)togglePlayPause {
-    if ([self isPlaying]) {
-        [self pause];
-    }
-    else {
-        [self play];
-    }
 }
 
 - (void)stop {
@@ -677,66 +771,6 @@ static const NSString *PlayerStatusContext;
         self.fullscreenShrinkButton.enabled = NO;
     }
     
-}
-
-- (void)toggleFullscreen:(id)sender {
-    _isFullscreen = !_isFullscreen;
-    [self onToggleFullscreen];
-    [self syncUI];
-    [self startIdleCountdown];
-}
-
-- (void)seek:(UISlider *)slider {
-    int timescale = self.playerItem.asset.duration.timescale;
-    float time = slider.value * (self.playerItem.asset.duration.value / timescale);
-    [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
-}
-
-- (void)startSeeking:(id)sender {
-    [self stopIdleCountdown];
-    self.isSeeking = YES;
-}
-
-- (void)endSeeking:(id)sender {
-    [self startIdleCountdown];
-    self.isSeeking = NO;
-}
-
-- (void)updateProgressIndicator:(id)sender {
-    CGFloat duration = CMTimeGetSeconds(self.playerItem.asset.duration);
-    
-    if (duration == 0 || isnan(duration)) {
-        // Video is a live stream
-        self.progressIndicator.hidden = YES;
-        [self.currentTimeLabel setText:nil];
-        [self.remainingTimeLabel setText:nil];
-    }
-    else {
-        self.progressIndicator.hidden = NO;
-        
-        CGFloat current;
-        if (self.isSeeking) {
-            current = self.progressIndicator.value * duration;
-        }
-        else {
-            // Otherwise, use the actual video position
-            current = CMTimeGetSeconds(self.player.currentTime);
-        }
-        
-        CGFloat left = duration - current;
-        
-        [self.progressIndicator setValue:(current / duration)];
-        [self.progressIndicator setSecondaryValue:([self availableDuration] / duration)];
-        
-        // Set time labels
-        
-        NSString *currentTimeString = current > 0 ? [self stringFromTimeInterval:current] : @"00:00";
-        NSString *remainingTimeString = left > 0 ? [self stringFromTimeInterval:left] : @"00:00";
-        
-        [self.currentTimeLabel setText:currentTimeString];
-        [self.remainingTimeLabel setText:[NSString stringWithFormat:@"-%@", remainingTimeString]];
-        
-    }
 }
 
 - (void)startIdleCountdown {
