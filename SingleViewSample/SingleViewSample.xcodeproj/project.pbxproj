@@ -15,6 +15,26 @@
 		02583A811C0BF6C700649671 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02583A7F1C0BF6C700649671 /* LaunchScreen.storyboard */; };
 		02583A8C1C0BF6C700649671 /* SingleViewSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583A8B1C0BF6C700649671 /* SingleViewSampleTests.m */; };
 		02583A971C0BF6C700649671 /* SingleViewSampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583A961C0BF6C700649671 /* SingleViewSampleUITests.m */; };
+		02583AB51C0BFDBB00649671 /* videoplayer_expand@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AA71C0BFDBA00649671 /* videoplayer_expand@1x.png */; };
+		02583AB61C0BFDBB00649671 /* videoplayer_expand@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AA81C0BFDBA00649671 /* videoplayer_expand@2x.png */; };
+		02583AB71C0BFDBB00649671 /* videoplayer_expand@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AA91C0BFDBB00649671 /* videoplayer_expand@3x.png */; };
+		02583AB81C0BFDBB00649671 /* videoplayer_pause@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAA1C0BFDBB00649671 /* videoplayer_pause@1x.png */; };
+		02583AB91C0BFDBB00649671 /* videoplayer_pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAB1C0BFDBB00649671 /* videoplayer_pause@2x.png */; };
+		02583ABA1C0BFDBB00649671 /* videoplayer_pause@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAC1C0BFDBB00649671 /* videoplayer_pause@3x.png */; };
+		02583ABB1C0BFDBB00649671 /* videoplayer_play@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAD1C0BFDBB00649671 /* videoplayer_play@1x.png */; };
+		02583ABC1C0BFDBB00649671 /* videoplayer_play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAE1C0BFDBB00649671 /* videoplayer_play@2x.png */; };
+		02583ABD1C0BFDBB00649671 /* videoplayer_play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AAF1C0BFDBB00649671 /* videoplayer_play@3x.png */; };
+		02583ABE1C0BFDBB00649671 /* videoplayer_shrink@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */; };
+		02583ABF1C0BFDBB00649671 /* videoplayer_shrink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */; };
+		02583AC01C0BFDBB00649671 /* videoplayer_shrink@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */; };
+		02583AC11C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */; };
+		02583AC21C0BFDBB00649671 /* DZVideoPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */; };
+		02583AD11C0BFDC900649671 /* DZPlayerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACB1C0BFDC900649671 /* DZPlayerButton.m */; };
+		02583AD21C0BFDC900649671 /* DZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACC1C0BFDC900649671 /* DZPlayerView.m */; };
+		02583AD31C0BFDC900649671 /* DZProgressIndicatorSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */; };
+		02583AD41C0BFDC900649671 /* DZVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */; };
+		02583AD51C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */; };
+		02583AD61C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +71,34 @@
 		02583A921C0BF6C700649671 /* SingleViewSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SingleViewSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		02583A961C0BF6C700649671 /* SingleViewSampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SingleViewSampleUITests.m; sourceTree = "<group>"; };
 		02583A981C0BF6C700649671 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		02583AA71C0BFDBA00649671 /* videoplayer_expand@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_expand@1x.png"; path = "PlaybackKit/Assets/videoplayer_expand@1x.png"; sourceTree = "<group>"; };
+		02583AA81C0BFDBA00649671 /* videoplayer_expand@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_expand@2x.png"; path = "PlaybackKit/Assets/videoplayer_expand@2x.png"; sourceTree = "<group>"; };
+		02583AA91C0BFDBB00649671 /* videoplayer_expand@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_expand@3x.png"; path = "PlaybackKit/Assets/videoplayer_expand@3x.png"; sourceTree = "<group>"; };
+		02583AAA1C0BFDBB00649671 /* videoplayer_pause@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_pause@1x.png"; path = "PlaybackKit/Assets/videoplayer_pause@1x.png"; sourceTree = "<group>"; };
+		02583AAB1C0BFDBB00649671 /* videoplayer_pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_pause@2x.png"; path = "PlaybackKit/Assets/videoplayer_pause@2x.png"; sourceTree = "<group>"; };
+		02583AAC1C0BFDBB00649671 /* videoplayer_pause@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_pause@3x.png"; path = "PlaybackKit/Assets/videoplayer_pause@3x.png"; sourceTree = "<group>"; };
+		02583AAD1C0BFDBB00649671 /* videoplayer_play@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_play@1x.png"; path = "PlaybackKit/Assets/videoplayer_play@1x.png"; sourceTree = "<group>"; };
+		02583AAE1C0BFDBB00649671 /* videoplayer_play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_play@2x.png"; path = "PlaybackKit/Assets/videoplayer_play@2x.png"; sourceTree = "<group>"; };
+		02583AAF1C0BFDBB00649671 /* videoplayer_play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_play@3x.png"; path = "PlaybackKit/Assets/videoplayer_play@3x.png"; sourceTree = "<group>"; };
+		02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@1x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@1x.png"; sourceTree = "<group>"; };
+		02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@2x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@2x.png"; sourceTree = "<group>"; };
+		02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@3x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@3x.png"; sourceTree = "<group>"; };
+		02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController_simple.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController_simple.xib; sourceTree = "<group>"; };
+		02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController.xib; sourceTree = "<group>"; };
+		02583AC31C0BFDC900649671 /* DZPlayerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerButton.h; path = PlaybackKit/src/DZPlayerButton.h; sourceTree = "<group>"; };
+		02583AC41C0BFDC900649671 /* DZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerView.h; path = PlaybackKit/src/DZPlayerView.h; sourceTree = "<group>"; };
+		02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZProgressIndicatorSlider.h; path = PlaybackKit/src/DZProgressIndicatorSlider.h; sourceTree = "<group>"; };
+		02583AC61C0BFDC900649671 /* DZVideoPlayerViewController_constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController_constants.h; path = PlaybackKit/src/DZVideoPlayerViewController_constants.h; sourceTree = "<group>"; };
+		02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController.h; path = PlaybackKit/src/DZVideoPlayerViewController.h; sourceTree = "<group>"; };
+		02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerConfiguration.h; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.h; sourceTree = "<group>"; };
+		02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerContainerView.h; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.h; sourceTree = "<group>"; };
+		02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerDelegate.h; path = PlaybackKit/src/DZVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
+		02583ACB1C0BFDC900649671 /* DZPlayerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZPlayerButton.m; path = PlaybackKit/src/DZPlayerButton.m; sourceTree = "<group>"; };
+		02583ACC1C0BFDC900649671 /* DZPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZPlayerView.m; path = PlaybackKit/src/DZPlayerView.m; sourceTree = "<group>"; };
+		02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZProgressIndicatorSlider.m; path = PlaybackKit/src/DZProgressIndicatorSlider.m; sourceTree = "<group>"; };
+		02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewController.m; path = PlaybackKit/src/DZVideoPlayerViewController.m; sourceTree = "<group>"; };
+		02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerConfiguration.m; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.m; sourceTree = "<group>"; };
+		02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerContainerView.m; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +129,7 @@
 		02583A651C0BF6C700649671 = {
 			isa = PBXGroup;
 			children = (
+				02583AA41C0BFC7900649671 /* PlaybackKit */,
 				02583A701C0BF6C700649671 /* SingleViewSample */,
 				02583A8A1C0BF6C700649671 /* SingleViewSampleTests */,
 				02583A951C0BF6C700649671 /* SingleViewSampleUITests */,
@@ -138,6 +187,57 @@
 				02583A981C0BF6C700649671 /* Info.plist */,
 			);
 			path = SingleViewSampleUITests;
+			sourceTree = "<group>";
+		};
+		02583AA41C0BFC7900649671 /* PlaybackKit */ = {
+			isa = PBXGroup;
+			children = (
+				02583AA61C0BFD9500649671 /* src */,
+				02583AA51C0BFD8400649671 /* Assets */,
+			);
+			name = PlaybackKit;
+			sourceTree = "<group>";
+		};
+		02583AA51C0BFD8400649671 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				02583AA71C0BFDBA00649671 /* videoplayer_expand@1x.png */,
+				02583AA81C0BFDBA00649671 /* videoplayer_expand@2x.png */,
+				02583AA91C0BFDBB00649671 /* videoplayer_expand@3x.png */,
+				02583AAA1C0BFDBB00649671 /* videoplayer_pause@1x.png */,
+				02583AAB1C0BFDBB00649671 /* videoplayer_pause@2x.png */,
+				02583AAC1C0BFDBB00649671 /* videoplayer_pause@3x.png */,
+				02583AAD1C0BFDBB00649671 /* videoplayer_play@1x.png */,
+				02583AAE1C0BFDBB00649671 /* videoplayer_play@2x.png */,
+				02583AAF1C0BFDBB00649671 /* videoplayer_play@3x.png */,
+				02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */,
+				02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */,
+				02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */,
+				02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */,
+				02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		02583AA61C0BFD9500649671 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				02583AC31C0BFDC900649671 /* DZPlayerButton.h */,
+				02583AC41C0BFDC900649671 /* DZPlayerView.h */,
+				02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */,
+				02583AC61C0BFDC900649671 /* DZVideoPlayerViewController_constants.h */,
+				02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */,
+				02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */,
+				02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */,
+				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
+				02583ACB1C0BFDC900649671 /* DZPlayerButton.m */,
+				02583ACC1C0BFDC900649671 /* DZPlayerView.m */,
+				02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */,
+				02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */,
+				02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */,
+				02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */,
+			);
+			name = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,8 +343,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02583AC21C0BFDBB00649671 /* DZVideoPlayerViewController.xib in Resources */,
+				02583ABC1C0BFDBB00649671 /* videoplayer_play@2x.png in Resources */,
+				02583AC11C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib in Resources */,
+				02583ABB1C0BFDBB00649671 /* videoplayer_play@1x.png in Resources */,
+				02583AB51C0BFDBB00649671 /* videoplayer_expand@1x.png in Resources */,
+				02583AB61C0BFDBB00649671 /* videoplayer_expand@2x.png in Resources */,
+				02583AB71C0BFDBB00649671 /* videoplayer_expand@3x.png in Resources */,
+				02583AB81C0BFDBB00649671 /* videoplayer_pause@1x.png in Resources */,
+				02583ABE1C0BFDBB00649671 /* videoplayer_shrink@1x.png in Resources */,
+				02583ABD1C0BFDBB00649671 /* videoplayer_play@3x.png in Resources */,
+				02583ABF1C0BFDBB00649671 /* videoplayer_shrink@2x.png in Resources */,
 				02583A811C0BF6C700649671 /* LaunchScreen.storyboard in Resources */,
+				02583AC01C0BFDBB00649671 /* videoplayer_shrink@3x.png in Resources */,
 				02583A7E1C0BF6C700649671 /* Assets.xcassets in Resources */,
+				02583AB91C0BFDBB00649671 /* videoplayer_pause@2x.png in Resources */,
+				02583ABA1C0BFDBB00649671 /* videoplayer_pause@3x.png in Resources */,
 				02583A7C1C0BF6C700649671 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,8 +385,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				02583A791C0BF6C700649671 /* ViewController.m in Sources */,
+				02583AD61C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m in Sources */,
 				02583A761C0BF6C700649671 /* AppDelegate.m in Sources */,
+				02583AD21C0BFDC900649671 /* DZPlayerView.m in Sources */,
+				02583AD31C0BFDC900649671 /* DZProgressIndicatorSlider.m in Sources */,
+				02583AD11C0BFDC900649671 /* DZPlayerButton.m in Sources */,
 				02583A731C0BF6C700649671 /* main.m in Sources */,
+				02583AD51C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m in Sources */,
+				02583AD41C0BFDC900649671 /* DZVideoPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +616,7 @@
 				02583A9D1C0BF6C700649671 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		02583A9E1C0BF6C700649671 /* Build configuration list for PBXNativeTarget "SingleViewSampleTests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +625,7 @@
 				02583AA01C0BF6C700649671 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		02583AA11C0BF6C700649671 /* Build configuration list for PBXNativeTarget "SingleViewSampleUITests" */ = {
 			isa = XCConfigurationList;
@@ -512,6 +634,7 @@
 				02583AA31C0BF6C700649671 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
