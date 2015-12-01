@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 Mysterious Organization. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import <MediaPlayer/MediaPlayer.h>
+@import UIKit;
+@import AVFoundation;
+@import AudioToolbox;
+@import MediaPlayer;
 
 #import "DZVideoPlayerViewController_constants.h"
 #import "DZVideoPlayerViewControllerDelegate.h"
@@ -42,6 +42,14 @@
 @property (strong, nonatomic) NSURL *videoURL;
 
 @end
+
+@interface DZVideoPlayerViewController (PlaybackAPI)
+
+- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
+- (void)stop;
+
+@end
+
 
 @interface DZVideoPlayerViewController (PlaybackKitActions)
 
@@ -118,17 +126,11 @@
 @end
 
 
-@interface DZVideoPlayerViewController (PlaybackAPI)
-
-- (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
-- (void)stop;
-
-@end
-
 @interface DZVideoPlayerViewController (NotificationHandle)
 
 - (void)setupNotifications;
 - (void)resignNotifications;
+
 - (void)handleAVPlayerItemDidPlayToEndTime:(NSNotification *)notification;
 - (void)handleAVPlayerItemFailedToPlayToEndTime:(NSNotification *)notification;
 - (void)handleAVPlayerItemPlaybackStalled:(NSNotification *)notification;

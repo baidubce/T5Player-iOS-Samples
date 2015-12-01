@@ -36,6 +36,14 @@
 		02583AD51C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */; };
 		02583AD61C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */; };
 		02583AD91C0C04D200649671 /* Star_Wars.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 02583AD81C0C04D200649671 /* Star_Wars.mp4 */; };
+		02583AE51C0C8C0100649671 /* libASIHTTP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583ADE1C0C8C0100649671 /* libASIHTTP.a */; };
+		02583AE61C0C8C0100649671 /* libBase64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583ADF1C0C8C0100649671 /* libBase64.a */; };
+		02583AE71C0C8C0100649671 /* libCyberPlayerController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE01C0C8C0100649671 /* libCyberPlayerController.a */; };
+		02583AE81C0C8C0100649671 /* libCyberPlayerUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE11C0C8C0100649671 /* libCyberPlayerUtils.a */; };
+		02583AE91C0C8C0100649671 /* libGzipCompressor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE21C0C8C0100649671 /* libGzipCompressor.a */; };
+		02583AEA1C0C8C0100649671 /* libReachability.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE31C0C8C0100649671 /* libReachability.a */; };
+		02583AEB1C0C8C0100649671 /* libSBJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE41C0C8C0100649671 /* libSBJSON.a */; };
+		02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AED1C0C910100649671 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +109,16 @@
 		02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerConfiguration.m; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.m; sourceTree = "<group>"; };
 		02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerContainerView.m; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.m; sourceTree = "<group>"; };
 		02583AD81C0C04D200649671 /* Star_Wars.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Star_Wars.mp4; sourceTree = "<group>"; };
+		02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerController.h; path = CyberPlayer/CyberPlayerController.h; sourceTree = "<group>"; };
+		02583ADE1C0C8C0100649671 /* libASIHTTP.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libASIHTTP.a; path = CyberPlayer/libASIHTTP.a; sourceTree = "<group>"; };
+		02583ADF1C0C8C0100649671 /* libBase64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBase64.a; path = CyberPlayer/libBase64.a; sourceTree = "<group>"; };
+		02583AE01C0C8C0100649671 /* libCyberPlayerController.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCyberPlayerController.a; path = CyberPlayer/libCyberPlayerController.a; sourceTree = "<group>"; };
+		02583AE11C0C8C0100649671 /* libCyberPlayerUtils.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCyberPlayerUtils.a; path = CyberPlayer/libCyberPlayerUtils.a; sourceTree = "<group>"; };
+		02583AE21C0C8C0100649671 /* libGzipCompressor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGzipCompressor.a; path = CyberPlayer/libGzipCompressor.a; sourceTree = "<group>"; };
+		02583AE31C0C8C0100649671 /* libReachability.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReachability.a; path = CyberPlayer/libReachability.a; sourceTree = "<group>"; };
+		02583AE41C0C8C0100649671 /* libSBJSON.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSBJSON.a; path = CyberPlayer/libSBJSON.a; sourceTree = "<group>"; };
+		02583AEC1C0C8C1E00649671 /* CyberplayerUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberplayerUtils.h; path = CyberPlayer/CyberplayerUtils.h; sourceTree = "<group>"; };
+		02583AED1C0C910100649671 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +126,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */,
+				02583AE61C0C8C0100649671 /* libBase64.a in Frameworks */,
+				02583AE51C0C8C0100649671 /* libASIHTTP.a in Frameworks */,
+				02583AEA1C0C8C0100649671 /* libReachability.a in Frameworks */,
+				02583AE81C0C8C0100649671 /* libCyberPlayerUtils.a in Frameworks */,
+				02583AE71C0C8C0100649671 /* libCyberPlayerController.a in Frameworks */,
+				02583AE91C0C8C0100649671 /* libGzipCompressor.a in Frameworks */,
+				02583AEB1C0C8C0100649671 /* libSBJSON.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +157,8 @@
 		02583A651C0BF6C700649671 = {
 			isa = PBXGroup;
 			children = (
+				02583AEF1C0C911400649671 /* Frameworks */,
+				02583ADC1C0C8BB900649671 /* CyberPlayer */,
 				02583AA41C0BFC7900649671 /* PlaybackKit */,
 				02583A701C0BF6C700649671 /* SingleViewSample */,
 				02583A8A1C0BF6C700649671 /* SingleViewSampleTests */,
@@ -249,6 +277,30 @@
 				02583AD81C0C04D200649671 /* Star_Wars.mp4 */,
 			);
 			name = media;
+			sourceTree = "<group>";
+		};
+		02583ADC1C0C8BB900649671 /* CyberPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				02583AEC1C0C8C1E00649671 /* CyberplayerUtils.h */,
+				02583ADE1C0C8C0100649671 /* libASIHTTP.a */,
+				02583ADF1C0C8C0100649671 /* libBase64.a */,
+				02583AE01C0C8C0100649671 /* libCyberPlayerController.a */,
+				02583AE11C0C8C0100649671 /* libCyberPlayerUtils.a */,
+				02583AE21C0C8C0100649671 /* libGzipCompressor.a */,
+				02583AE31C0C8C0100649671 /* libReachability.a */,
+				02583AE41C0C8C0100649671 /* libSBJSON.a */,
+				02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */,
+			);
+			name = CyberPlayer;
+			sourceTree = "<group>";
+		};
+		02583AEF1C0C911400649671 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				02583AED1C0C910100649671 /* MobileCoreServices.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -546,6 +598,10 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SingleViewSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CyberPlayer",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.baidu.bce.t5player.SingleViewSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -558,6 +614,10 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SingleViewSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CyberPlayer",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.baidu.bce.t5player.SingleViewSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

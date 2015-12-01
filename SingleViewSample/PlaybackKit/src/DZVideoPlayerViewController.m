@@ -7,6 +7,8 @@
 //
 
 #import "DZVideoPlayerViewController.h"
+#import "CyberPlayerController.h"
+#import "CyberplayerUtils.h"
 
 static const NSString *ItemStatusContext;
 static const NSString *PlayerRateContext;
@@ -18,6 +20,7 @@ static const NSString *PlayerStatusContext;
 }
 
 #pragma mark - Player Engine properties
+@property (strong, nonatomic) CyberPlayerController* cyberPlayer;
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) AVPlayerItem *playerItem;
 @property (assign, nonatomic) CGRect initialFrame;
