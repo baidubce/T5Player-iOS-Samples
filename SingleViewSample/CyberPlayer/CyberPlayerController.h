@@ -24,7 +24,13 @@ CBP_EXTERN NSString * const CyberPlayerPlaybackErrorNotification;
 CBP_EXTERN NSString * const CyberPlayerSeekingDidFinishNotification;
 CBP_EXTERN NSString * const CyberPlayerPlaybackStateDidChangeNotification;
 CBP_EXTERN NSString * const CyberPlayerMeidaTypeAudioOnlyNotification;
+CBP_EXTERN NSString * const CyberPlayerGotPlayQualityNotification;
+CBP_EXTERN NSString * const CyberPlayerGotAVSyncDiffNotification;
 CBP_EXTERN NSString * const CyberPlayerGotNetworkBitrateNotification;
+
+CBP_EXTERN NSString * const CBPUOnSniffCompletionNotification;
+CBP_EXTERN NSString * const CBPUOnSniffErrorNotification;
+
 
 enum {
     CBPMovieScalingModeNone,       // 无缩放
