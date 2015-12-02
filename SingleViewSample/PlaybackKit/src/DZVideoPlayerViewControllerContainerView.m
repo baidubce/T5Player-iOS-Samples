@@ -9,64 +9,68 @@
 #import "DZVideoPlayerViewControllerContainerView.h"
 #import "DZVideoPlayerViewController.h"
 
+
+@interface DZVideoPlayerViewControllerContainerView ()
+
+- (void)initPlaybackViewController;
+
+@end
+
+
+
 @implementation DZVideoPlayerViewControllerContainerView
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (instancetype)initWithStyle:(DZVideoPlayerViewControllerStyle)style {
-    self = [super init];
-    if (self) {
-        self.style = style;
-        [self commonInit];
-    }
-    return self;
-}
-
-- (instancetype)initWithNibNameToInitControllerWith:(NSString *)nibNameToInitControllerWith {
-    self = [super init];
-    if (self) {
-        self.nibNameToInitControllerWith = nibNameToInitControllerWith;
-        [self commonInit];
-    }
-    return self;
-}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    [self commonInit];
+    // sync nib file name
+    NSLog(@"DZVideoPlayerViewControllerContainerView.awakeFromNib");
+    NSLog(@"nibNameToInitControllerWith = %@", self.nibNameToInitControllerWith);
+    NSLog(@"style = %i", self.style);
+    NSLog(@"ak = %@", self.ak);
+    
+    if (self.nibNameToInitControllerWith) {
+        NSString *classString = NSStringFromClass([DZVideoPlayerViewController class]);
+        switch (self.style) {
+            case DZVideoPlayerViewControllerStyleDefault:
+                self.nibNameToInitControllerWith = classString;
+                break;
+                
+            case DZVideoPlayerViewControllerStyleSimple:
+                self.nibNameToInitControllerWith = [NSString stringWithFormat:@"%@_%@", classString, @"simple"];
+                break;
+                
+            default:
+                self.style = DZVideoPlayerViewControllerStyleDefault;
+                self.nibNameToInitControllerWith = classString;
+                break;
+        }
+    }
+
+    [self initPlaybackViewController];
 }
 
-- (void)commonInit {
+/*
+ * Instantiate videoPlayerViewController with user defined style or nib
+ * Bind playback view with container view's size
+ */
+- (void)initPlaybackViewController {
+    NSLog(@"DZVideoPlayerViewControllerContainerView initPlaybackViewController, \n %@", [NSThread callStackSymbols]);
+    
     NSBundle *bundle = [DZVideoPlayerViewController bundle];
     
-    NSString *nibName;
-    if (self.nibNameToInitControllerWith != nil) {
-        nibName = self.nibNameToInitControllerWith;
-    }
-    else {
-        nibName = [DZVideoPlayerViewController nibNameForStyle:self.style];
-    }
+    // init videoPlayerViewController with user defined nib.
+    self.videoPlayerViewController =
+         [[DZVideoPlayerViewController alloc] initWithNibName:self.nibNameToInitControllerWith
+                                                       bundle:bundle
+                                                           ak:_ak];
     
-    self.videoPlayerViewController = [[DZVideoPlayerViewController alloc] initWithNibName:nibName
-                                                                                   bundle:bundle];
     self.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    // set playback's frame to the containers's bounds
     self.videoPlayerViewController.view.frame = self.bounds;
     [self addSubview:self.videoPlayerViewController.view];
     
+    // bind playback's frame to the containers's boundary
     NSDictionary *viewsDictionary = @{@"view":self.videoPlayerViewController.view};
     NSMutableArray *constraintsArray = [NSMutableArray new];
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
@@ -77,15 +81,33 @@
                                            constraintsWithVisualFormat:@"V:|[view]|"
                                            options:0 metrics:nil
                                            views:viewsDictionary]];
+
     [self addConstraints:constraintsArray];
+    
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end
+
+@implementation DZVideoPlayerViewControllerContainerView (Test)
+
+- (instancetype)initWithStyle:(DZVideoPlayerViewControllerStyle)style {
+    self = [super init];
+    if (self) {
+        self.style = style;
+        [self initPlaybackViewController];
+    }
+    return self;
+}
+
+- (instancetype)initWithNibNameToInitControllerWith:(NSString *)nibNameToInitControllerWith {
+    self = [super init];
+    if (self) {
+        self.nibNameToInitControllerWith = nibNameToInitControllerWith;
+        [self initPlaybackViewController];
+    }
+    return self;
+}
+
+@end
+

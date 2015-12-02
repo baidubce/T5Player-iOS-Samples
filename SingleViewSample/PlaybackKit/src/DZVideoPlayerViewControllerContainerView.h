@@ -7,10 +7,26 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DZVideoPlayerViewController_constants.h"
+#import "DZVideoPlayerViewController.h"
+
+typedef NS_ENUM(NSInteger, DZVideoPlayerViewControllerStyle) {
+    DZVideoPlayerViewControllerStyleDefault = 0,
+    DZVideoPlayerViewControllerStyleSimple = 1
+};
+
+
 @class DZVideoPlayerViewController;
 
+
+
+
 @interface DZVideoPlayerViewControllerContainerView : UIView
+/*
+ The controller will be created on Init, get it using this property.
+ */
+@property (strong, nonatomic) DZVideoPlayerViewController *videoPlayerViewController;
+
+
 /*
  Use this property to pick one of the suggested styles.
  One of the existing nib's will be used.
@@ -21,13 +37,24 @@
  Set this property to provide your own nib to provide custom view.
  Setting this property will result in ignoring 'style' property
  */
-@property (assign, nonatomic) NSString *nibNameToInitControllerWith;
+@property (strong, nonatomic) NSString *nibNameToInitControllerWith;
 
 /*
- The controller will be created on Init, get it using this property.
+ Access Key for each registered user on Baidu Open Cloud
+ Defaults to nil
  */
-@property (strong, nonatomic) DZVideoPlayerViewController *videoPlayerViewController;
+@property (strong, nonatomic) NSString* ak;
+
+@end
+
+
+
+
+@interface DZVideoPlayerViewControllerContainerView (Test)
 
 - (instancetype)initWithStyle:(DZVideoPlayerViewControllerStyle)style;
+
 - (instancetype)initWithNibNameToInitControllerWith:(NSString *)nibNameToInitControllerWith;
+
+
 @end

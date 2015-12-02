@@ -97,7 +97,6 @@
 		02583AC31C0BFDC900649671 /* DZPlayerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerButton.h; path = PlaybackKit/src/DZPlayerButton.h; sourceTree = "<group>"; };
 		02583AC41C0BFDC900649671 /* DZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerView.h; path = PlaybackKit/src/DZPlayerView.h; sourceTree = "<group>"; };
 		02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZProgressIndicatorSlider.h; path = PlaybackKit/src/DZProgressIndicatorSlider.h; sourceTree = "<group>"; };
-		02583AC61C0BFDC900649671 /* DZVideoPlayerViewController_constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController_constants.h; path = PlaybackKit/src/DZVideoPlayerViewController_constants.h; sourceTree = "<group>"; };
 		02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController.h; path = PlaybackKit/src/DZVideoPlayerViewController.h; sourceTree = "<group>"; };
 		02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerConfiguration.h; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.h; sourceTree = "<group>"; };
 		02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerContainerView.h; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.h; sourceTree = "<group>"; };
@@ -259,7 +258,6 @@
 				02583ACC1C0BFDC900649671 /* DZPlayerView.m */,
 				02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */,
 				02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */,
-				02583AC61C0BFDC900649671 /* DZVideoPlayerViewController_constants.h */,
 				02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */,
 				02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */,
 				02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */,
@@ -282,6 +280,7 @@
 		02583ADC1C0C8BB900649671 /* CyberPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */,
 				02583AEC1C0C8C1E00649671 /* CyberplayerUtils.h */,
 				02583ADE1C0C8C0100649671 /* libASIHTTP.a */,
 				02583ADF1C0C8C0100649671 /* libBase64.a */,
@@ -290,7 +289,6 @@
 				02583AE21C0C8C0100649671 /* libGzipCompressor.a */,
 				02583AE31C0C8C0100649671 /* libReachability.a */,
 				02583AE41C0C8C0100649671 /* libSBJSON.a */,
-				02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */,
 			);
 			name = CyberPlayer;
 			sourceTree = "<group>";

@@ -10,14 +10,13 @@
 @import AVFoundation;
 @import AudioToolbox;
 @import MediaPlayer;
+#import "CyberPlayerController.h"
+#import "CyberplayerUtils.h"
 
-#import "DZVideoPlayerViewController_constants.h"
 #import "DZVideoPlayerViewControllerDelegate.h"
-#import "DZVideoPlayerViewControllerConfiguration.h"
 #import "DZPlayerView.h"
 #import "DZProgressIndicatorSlider.h"
 #import "DZVideoPlayerViewControllerContainerView.h"
-
 
 @interface DZVideoPlayerViewController : UIViewController
 
@@ -37,9 +36,22 @@
 
 @property (weak, nonatomic) id<DZVideoPlayerViewControllerDelegate> delegate;
 
-@property (strong, nonatomic) DZVideoPlayerViewControllerConfiguration *configuration;
+
+// Configuration of playback kit behavior
+// defaults to NO
+@property (assign, nonatomic) BOOL isBackgroundPlaybackEnabled;
+// defaults to 3 seconds
+@property (assign, nonatomic) NSTimeInterval delayBeforeHidingViewsOnIdle;
+// defaults to YES
+@property (assign, nonatomic) BOOL isShowFullscreenExpandAndShrinkButtonsEnabled;
+// defaults to YES
+@property (assign, nonatomic) BOOL isHideControlsOnIdleEnabled;
 
 @property (strong, nonatomic) NSURL *videoURL;
+
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil ak:(NSString*) ak;
+
 
 @end
 
@@ -91,8 +103,6 @@
 @interface DZVideoPlayerViewController (KitConfiguration)
 
 + (NSBundle*)bundle;
-+ (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style;
-+ (DZVideoPlayerViewControllerConfiguration *)defaultConfiguration;
 
 @end
 

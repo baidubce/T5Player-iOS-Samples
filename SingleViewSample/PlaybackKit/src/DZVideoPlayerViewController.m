@@ -37,6 +37,11 @@ static const NSString *PlayerStatusContext;
 @property (strong, nonatomic) id playCommandTarget;
 @property (strong, nonatomic) id pauseCommandTarget;
 
+@property (strong, nonatomic) NSString * ak;
+
+// has topToolbarView and bottomToolbarView by default
+@property (strong, nonatomic) NSMutableArray *viewsToHideOnIdle;
+
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)time;
 
 - (void)syncUI;
@@ -49,39 +54,32 @@ static const NSString *PlayerStatusContext;
 
 #pragma mark - ViewController Lifecycle Override
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil ak:(NSString *)ak {
+
+    // set default configuration properties before loading nib
+    _ak = ak;
+    _viewsToHideOnIdle = [NSMutableArray new];
+    _delayBeforeHidingViewsOnIdle = 3.0;
+    _isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
+    _isHideControlsOnIdleEnabled = YES;
+    _isBackgroundPlaybackEnabled = NO;
+    
+    NSLog(@"DZVideoPlayerViewController initWithNibName(), \n %@", [NSThread callStackSymbols]);
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        [self commonInit];
-    }
     return self;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self commonInit];
-}
-
-- (void)commonInit {
-    self.configuration = [[self class] defaultConfiguration];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"DZVideoPlayerViewController viewDidLoad(), \n %@", [NSThread callStackSymbols]);
+    
     if (self.topToolbarView) {
-        [self.configuration.viewsToHideOnIdle addObject:self.topToolbarView];
+        [self.viewsToHideOnIdle addObject:self.topToolbarView];
     }
     if (self.bottomToolbarView) {
-        [self.configuration.viewsToHideOnIdle addObject:self.bottomToolbarView];
+        [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
     }
     
     self.initialFrame = self.view.frame;
@@ -138,7 +136,7 @@ static const NSString *PlayerStatusContext;
         self.pauseButton.enabled = NO;
     }
     
-    if (self.configuration.isShowFullscreenExpandAndShrinkButtonsEnabled) {
+    if (self.isShowFullscreenExpandAndShrinkButtonsEnabled) {
         if (self.isFullscreen) {
             self.fullscreenExpandButton.hidden = YES;
             self.fullscreenExpandButton.enabled = NO;
@@ -457,35 +455,6 @@ static const NSString *PlayerStatusContext;
     return bundle;
 }
 
-+ (NSString *)nibNameForStyle:(DZVideoPlayerViewControllerStyle)style {
-    NSString *nibName;
-    NSString *classString = NSStringFromClass([DZVideoPlayerViewController class]);
-    switch (style) {
-        case DZVideoPlayerViewControllerStyleDefault:
-            nibName = classString;
-            break;
-            
-        case DZVideoPlayerViewControllerStyleSimple:
-            nibName = [NSString stringWithFormat:@"%@_%@", classString, @"simple"];
-            break;
-            
-        default:
-            nibName = classString;
-            break;
-    }
-    return nibName;
-}
-
-+ (DZVideoPlayerViewControllerConfiguration *)defaultConfiguration {
-    DZVideoPlayerViewControllerConfiguration *configuration = [[DZVideoPlayerViewControllerConfiguration alloc] init];
-    configuration.viewsToHideOnIdle = [NSMutableArray new];
-    configuration.delayBeforeHidingViewsOnIdle = 3.0;
-    configuration.isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
-    configuration.isHideControlsOnIdleEnabled = YES;
-    configuration.isBackgroundPlaybackEnabled = YES;
-    return configuration;
-}
-
 
 @end
 
@@ -589,13 +558,13 @@ static const NSString *PlayerStatusContext;
 }
 
 - (void)handleApplicationDidEnterBackground:(NSNotification *)notification {
-    if (self.configuration.isBackgroundPlaybackEnabled) {
+    if (self.isBackgroundPlaybackEnabled) {
         self.playerView.player = nil;
     }
 }
 
 - (void)handleApplicationDidBecomeActive:(NSNotification *)notification {
-    if (self.configuration.isBackgroundPlaybackEnabled) {
+    if (self.isBackgroundPlaybackEnabled) {
         self.playerView.player = self.player;
     }
 }
@@ -753,8 +722,8 @@ static const NSString *PlayerStatusContext;
     if (self.idleTimer) {
         [self.idleTimer invalidate];
     }
-    if (self.configuration.isHideControlsOnIdleEnabled) {
-        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.configuration.delayBeforeHidingViewsOnIdle
+    if (self.isHideControlsOnIdleEnabled) {
+        self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayBeforeHidingViewsOnIdle
                                                           target:self
                                                         selector:@selector(hideControls)
                                                         userInfo:nil
@@ -770,7 +739,7 @@ static const NSString *PlayerStatusContext;
 }
 
 - (void)hideControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
+    NSArray *views = self.viewsToHideOnIdle;
     [UIView animateWithDuration:0.3f animations:^{
         for (UIView *view in views) {
             view.alpha = 0.0;
@@ -780,7 +749,7 @@ static const NSString *PlayerStatusContext;
 }
 
 - (void)showControls {
-    NSArray *views = self.configuration.viewsToHideOnIdle;
+    NSArray *views = self.viewsToHideOnIdle;
     [UIView animateWithDuration:0.3f animations:^{
         for (UIView *view in views) {
             view.alpha = 1.0;
