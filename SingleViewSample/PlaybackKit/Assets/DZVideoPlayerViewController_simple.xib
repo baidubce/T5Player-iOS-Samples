@@ -8,13 +8,13 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DZVideoPlayerViewController">
             <connections>
                 <outlet property="activityIndicatorView" destination="M0K-8Q-vIw" id="a4Q-eI-m8o"/>
+                <outlet property="backgroundView" destination="lw1-po-bea" id="OJk-pY-agA"/>
                 <outlet property="bottomToolbarView" destination="Omr-8F-wN5" id="Oti-HH-3PV"/>
                 <outlet property="currentTimeLabel" destination="nci-GB-6YN" id="EaE-rZ-ROK"/>
                 <outlet property="fullscreenExpandButton" destination="Ba7-Io-2c5" id="10f-0S-9O7"/>
                 <outlet property="fullscreenShrinkButton" destination="KjX-5t-jdJ" id="XpY-VP-1aT"/>
                 <outlet property="pauseButton" destination="9zm-dn-EbA" id="2rU-qn-FfY"/>
                 <outlet property="playButton" destination="ArK-79-Cut" id="i5f-RL-U6s"/>
-                <outlet property="playerView" destination="lw1-po-bea" id="8JJ-kk-vFJ"/>
                 <outlet property="progressIndicator" destination="LWi-Wz-NQ7" id="J7g-Ms-5pY"/>
                 <outlet property="remainingTimeLabel" destination="YiH-9G-eQ4" id="FZ3-SS-2Jt"/>
                 <outlet property="view" destination="iN0-l3-epB" id="5lv-e0-0dE"/>
@@ -25,7 +25,7 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lw1-po-bea" userLabel="PlayerView" customClass="DZPlayerView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lw1-po-bea" userLabel="backgroundView" customClass="DZPlayerView">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>

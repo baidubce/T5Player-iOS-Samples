@@ -1,8 +1,5 @@
 //
 //  DZVideoPlayerViewControllerContainerView.m
-//  Pods
-//
-//  Created by Denis Zamataev on 01/06/15.
 //
 //
 
@@ -28,7 +25,7 @@
     NSLog(@"style = %i", self.style);
     NSLog(@"ak = %@", self.ak);
     
-    if (self.nibNameToInitControllerWith) {
+    if (!self.nibNameToInitControllerWith) {
         NSString *classString = NSStringFromClass([DZVideoPlayerViewController class]);
         switch (self.style) {
             case DZVideoPlayerViewControllerStyleDefault:
@@ -54,36 +51,34 @@
  * Bind playback view with container view's size
  */
 - (void)initPlaybackViewController {
-    NSLog(@"DZVideoPlayerViewControllerContainerView initPlaybackViewController, \n %@", [NSThread callStackSymbols]);
-    
+    NSLog(@"DZVideoPlayerViewControllerContainerView create PlaybackViewController with nib: %@", self.nibNameToInitControllerWith);
     NSBundle *bundle = [DZVideoPlayerViewController bundle];
     
     // init videoPlayerViewController with user defined nib.
     self.videoPlayerViewController =
          [[DZVideoPlayerViewController alloc] initWithNibName:self.nibNameToInitControllerWith
                                                        bundle:bundle
-                                                           ak:_ak];
+                                                    parrent:self];
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
     
+    // videoPlayerViewController is loaded from nib, fit its size to container view.
     // set playback's frame to the containers's bounds
-    self.videoPlayerViewController.view.frame = self.bounds;
     [self addSubview:self.videoPlayerViewController.view];
     
-    // bind playback's frame to the containers's boundary
-    NSDictionary *viewsDictionary = @{@"view":self.videoPlayerViewController.view};
-    NSMutableArray *constraintsArray = [NSMutableArray new];
+    // bind the size of player's view to parrent view
+    NSDictionary *viewsDictionary = @{@"playerView":self.videoPlayerViewController.cyberPlayer.view, @"parrentView":self};
+    NSMutableArray *constraintsArray = [[NSMutableArray alloc] init];
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-                                           constraintsWithVisualFormat:@"H:|[view]|"
+                                           constraintsWithVisualFormat:@"H:[playerView(==parrentView)]"
                                            options:0 metrics:nil
                                            views:viewsDictionary]];
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-                                           constraintsWithVisualFormat:@"V:|[view]|"
+                                           constraintsWithVisualFormat:@"V:[playerView(==parrentView)]"
                                            options:0 metrics:nil
                                            views:viewsDictionary]];
-
     [self addConstraints:constraintsArray];
-    
+
 }
 
 

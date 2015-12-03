@@ -10,6 +10,7 @@
 @import AVFoundation;
 @import AudioToolbox;
 @import MediaPlayer;
+
 #import "CyberPlayerController.h"
 #import "CyberplayerUtils.h"
 
@@ -18,10 +19,12 @@
 #import "DZProgressIndicatorSlider.h"
 #import "DZVideoPlayerViewControllerContainerView.h"
 
+@class DZVideoPlayerViewControllerContainerView;
+
 @interface DZVideoPlayerViewController : UIViewController
 
 // Interface Builder Outlets
-@property (weak, nonatomic) IBOutlet DZPlayerView *playerView;
+@property (weak, nonatomic) IBOutlet DZPlayerView *backgroundView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UIView *topToolbarView;
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
@@ -36,6 +39,7 @@
 
 @property (weak, nonatomic) id<DZVideoPlayerViewControllerDelegate> delegate;
 
+@property (strong, nonatomic) CyberPlayerController* cyberPlayer;
 
 // Configuration of playback kit behavior
 // defaults to NO
@@ -49,12 +53,14 @@
 
 @property (strong, nonatomic) NSURL *videoURL;
 
+//@property (strong, nonatomic) NSString * ak;
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil ak:(NSString*) ak;
-
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil parrent:(DZVideoPlayerViewControllerContainerView *)parrentView ;
 
 @end
 
+
+#pragma mark - playback commands methods
 @interface DZVideoPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
@@ -63,6 +69,7 @@
 @end
 
 
+#pragma mark - Action methods for control kits
 @interface DZVideoPlayerViewController (PlaybackKitActions)
 
 -  (void)setupActions;
@@ -79,14 +86,16 @@
 
 
 
+#pragma mark - methods about playback engine
 @interface DZVideoPlayerViewController (VideoEngine)
 
-- (void)setupPlayer;
+- (void)setupCyberPlayer;
 - (void)setupAudioSession;
 
 @end
 
 
+#pragma mark - methods for lock screen
 @interface DZVideoPlayerViewController (LockScreenControl)
 
 - (void)setupRemoteControlEvents;
@@ -100,13 +109,14 @@
 @end
 
 
+#pragma mark - methods for configuration
 @interface DZVideoPlayerViewController (KitConfiguration)
 
 + (NSBundle*)bundle;
 
 @end
 
-// Readonly Playback properties
+#pragma mark - readonly properties
 @interface DZVideoPlayerViewController (PlaybackStatus)
 
 @property (readonly, nonatomic) NSTimeInterval currentPlaybackTime;
@@ -117,6 +127,7 @@
 @end
 
 
+#pragma mark - methods about playback progress
 @interface DZVideoPlayerViewController (PlaybackProgroess)
 
 - (void)setupPlaybackProgress;
@@ -126,6 +137,16 @@
 @end
 
 
+#pragma mark - methods about gestures
+@interface DZVideoPlayerViewController (Gesture)
+
+-(void) registerGestureRecognizer;
+-(void) singleTapOnPlaybackView;
+
+
+@end
+
+#pragma mark - methods about playback control auto hide
 @interface DZVideoPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startIdleCountdown;
@@ -136,24 +157,21 @@
 @end
 
 
+#pragma mark - methods about notification handler
 @interface DZVideoPlayerViewController (NotificationHandle)
 
 - (void)setupNotifications;
 - (void)resignNotifications;
 
-- (void)handleAVPlayerItemDidPlayToEndTime:(NSNotification *)notification;
-- (void)handleAVPlayerItemFailedToPlayToEndTime:(NSNotification *)notification;
-- (void)handleAVPlayerItemPlaybackStalled:(NSNotification *)notification;
+- (void)onCyberPlayerLoadDidPreparedNotification: (NSNotification*)aNotification;
+
 - (void)handleApplicationDidEnterBackground:(NSNotification *)notification;
 - (void)handleApplicationDidBecomeActive:(NSNotification *)notification;
-- (void)handleAVAudioSessionInterruptionNotification:(NSNotification *)notification;
-- (void)handleAVAudioSessionRouteChangeNotification:(NSNotification *)notification;
-- (void)handleAVAudioSessionMediaServicesWereLostNotification:(NSNotification *)notification;
-- (void)handleAVAudioSessionMediaServicesWereResetNotification:(NSNotification *)notification;
 
 @end
 
 
+#pragma mark - methods about dispatch delegation
 @interface DZVideoPlayerViewController (DelegateInvocation)
 
 - (void)onFailedToLoadAssetWithError:(NSError*)error;
