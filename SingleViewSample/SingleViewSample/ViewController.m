@@ -18,7 +18,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    // after create container view, customize the internal playback view
+    // get configuration from playbackContainerView. instantiate DZVideoPlayerViewController and add constraints.
+    // set video address and AK if need
+    
     DZVideoPlayerViewController *videoPlayerViewController = self.playbackContainerView.videoPlayerViewController;
     videoPlayerViewController.delegate = self;
 
@@ -28,6 +31,9 @@
 
     NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
     videoPlayerViewController.videoURL = localVideo;
+    
+//    NSString* ak = @"sssssssssssssssssssssssssss";
+//    [videoPlayerViewController.cyberPlayer setAccessKey:ak];
     [videoPlayerViewController prepareAndPlayAutomatically:YES];
 
 }
@@ -42,7 +48,7 @@
 @end
 
 
-@implementation ViewController (ControllerDelegate)
+@implementation ViewController (PlaybackDelegate)
 
 - (void)playerFailedToLoadAssetWithError:(NSError *)error {
     NSLog(@"playerFailedToLoadAssetWithError : %@", error);

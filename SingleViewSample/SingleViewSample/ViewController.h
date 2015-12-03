@@ -17,6 +17,6 @@
 @end
 
 
-@interface ViewController (ControllerDelegate) <DZVideoPlayerViewControllerDelegate>
+@interface ViewController (PlaybackDelegate) <DZVideoPlayerViewControllerDelegate>
 @end
 
