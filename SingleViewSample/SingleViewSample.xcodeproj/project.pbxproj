@@ -44,6 +44,8 @@
 		02583AEA1C0C8C0100649671 /* libReachability.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE31C0C8C0100649671 /* libReachability.a */; };
 		02583AEB1C0C8C0100649671 /* libSBJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AE41C0C8C0100649671 /* libSBJSON.a */; };
 		02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AED1C0C910100649671 /* MobileCoreServices.framework */; };
+		0269E64C1C102D420011509F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64B1C102D420011509F /* libz.tbd */; };
+		0269E64E1C102E700011509F /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64D1C102E700011509F /* libbz2.1.0.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +120,8 @@
 		02583AE41C0C8C0100649671 /* libSBJSON.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSBJSON.a; path = CyberPlayer/libSBJSON.a; sourceTree = "<group>"; };
 		02583AEC1C0C8C1E00649671 /* CyberplayerUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberplayerUtils.h; path = CyberPlayer/CyberplayerUtils.h; sourceTree = "<group>"; };
 		02583AED1C0C910100649671 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		0269E64B1C102D420011509F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		0269E64D1C102E700011509F /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0269E64E1C102E700011509F /* libbz2.1.0.tbd in Frameworks */,
+				0269E64C1C102D420011509F /* libz.tbd in Frameworks */,
 				02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */,
 				02583AE61C0C8C0100649671 /* libBase64.a in Frameworks */,
 				02583AE51C0C8C0100649671 /* libASIHTTP.a in Frameworks */,
@@ -296,6 +302,8 @@
 		02583AEF1C0C911400649671 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0269E64D1C102E700011509F /* libbz2.1.0.tbd */,
+				0269E64B1C102D420011509F /* libz.tbd */,
 				02583AED1C0C910100649671 /* MobileCoreServices.framework */,
 			);
 			name = Frameworks;
