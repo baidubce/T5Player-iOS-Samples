@@ -18,6 +18,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     NSLog(@"Screen size: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
+//    [NSUserDefaults standardUserDefaults] 
     return YES;
 }
 
