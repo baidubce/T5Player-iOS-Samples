@@ -147,8 +147,8 @@
 #pragma mark - methods about playback control auto hide
 @interface DZVideoPlayerViewController (PlaybackKitAutoHide)
 
-- (void)startAutoHideTImerCountdown;
-- (void)stopAutoHideTImerCountdown;
+- (void)startAutoHideTimerCountdown;
+- (void)stopAutoHideTimerCountdown;
 - (void)hideControls;
 - (void)showControls;
 

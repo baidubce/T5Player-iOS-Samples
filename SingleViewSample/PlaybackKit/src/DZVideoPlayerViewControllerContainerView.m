@@ -22,7 +22,7 @@
     // sync nib file name
     NSLog(@"DZVideoPlayerViewControllerContainerView.awakeFromNib");
     NSLog(@"nibNameToInitControllerWith = %@", self.nibNameToInitControllerWith);
-    NSLog(@"style = %i", self.style);
+    NSLog(@"style = %li", self.style);
     NSLog(@"ak = %@", self.ak);
     
     if (!self.nibNameToInitControllerWith) {
@@ -81,28 +81,4 @@
 
 }
 
-
 @end
-
-@implementation DZVideoPlayerViewControllerContainerView (Test)
-
-- (instancetype)initWithStyle:(DZVideoPlayerViewControllerStyle)style {
-    self = [super init];
-    if (self) {
-        self.style = style;
-        [self initPlaybackViewController];
-    }
-    return self;
-}
-
-- (instancetype)initWithNibNameToInitControllerWith:(NSString *)nibNameToInitControllerWith {
-    self = [super init];
-    if (self) {
-        self.nibNameToInitControllerWith = nibNameToInitControllerWith;
-        [self initPlaybackViewController];
-    }
-    return self;
-}
-
-@end
-

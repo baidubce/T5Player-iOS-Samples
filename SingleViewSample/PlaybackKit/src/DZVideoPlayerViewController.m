@@ -498,14 +498,14 @@ static const NSString *PlayerStatusContext;
 
 - (IBAction)play {
     [self doPlay];
-    [self startAutoHideTImerCountdown];
+    [self startAutoHideTimerCountdown];
     [self onPlay];
     [self updateNowPlayingInfo];
 }
 
 - (IBAction)pause {
     [self doPause];
-    [self stopAutoHideTImerCountdown];
+    [self stopAutoHideTimerCountdown];
     [self onPause];
     [self updateNowPlayingInfo];
 }
@@ -526,12 +526,12 @@ static const NSString *PlayerStatusContext;
 }
 
 - (IBAction)startSeeking:(id)sender {
-    [self stopAutoHideTImerCountdown];
+    [self stopAutoHideTimerCountdown];
     self.isSeeking = YES;
 }
 
 - (IBAction)endSeeking:(id)sender {
-    [self startAutoHideTImerCountdown];
+    [self startAutoHideTimerCountdown];
     self.isSeeking = NO;
 }
 
@@ -545,7 +545,7 @@ static const NSString *PlayerStatusContext;
     _isFullscreen = !_isFullscreen;
     [self onToggleFullscreen];
     [self syncUI];
-    [self startAutoHideTImerCountdown];
+    [self startAutoHideTimerCountdown];
 }
 
 @end
@@ -925,7 +925,7 @@ static const NSString *PlayerStatusContext;
     if (self.isControlsHidden) {
         [self showControls];
     } else {
-        [self startAutoHideTImerCountdown];
+        [self startAutoHideTimerCountdown];
     }
 }
 @end
@@ -934,7 +934,7 @@ static const NSString *PlayerStatusContext;
 
 @implementation DZVideoPlayerViewController (PlaybackKitAutoHide)
 
-- (void)startAutoHideTImerCountdown {
+- (void)startAutoHideTimerCountdown {
     if (self.autoHideTImer) {
         [self.autoHideTImer invalidate];
     }
@@ -947,7 +947,7 @@ static const NSString *PlayerStatusContext;
     }
 }
 
-- (void)stopAutoHideTImerCountdown {
+- (void)stopAutoHideTimerCountdown {
     if (self.autoHideTImer) {
         [self.autoHideTImer invalidate];
         self.autoHideTImer = nil;
@@ -972,7 +972,7 @@ static const NSString *PlayerStatusContext;
         }
     }];
     self.isControlsHidden = NO;
-    [self startAutoHideTImerCountdown];
+    [self startAutoHideTimerCountdown];
 }
 
 @end
@@ -981,16 +981,13 @@ static const NSString *PlayerStatusContext;
 @implementation DZVideoPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
-    DZVideoPlayerViewController* __weak welf = self;
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [welf play];
-    });
+    [self play];
 }
 
 - (void)stop {
     [self.cyberPlayer pause];
     [self.cyberPlayer stop];
-    [self stopAutoHideTImerCountdown];
+    [self stopAutoHideTimerCountdown];
     [self syncUI];
     [self onStop];
     [self updateNowPlayingInfo];

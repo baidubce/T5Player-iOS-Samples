@@ -47,14 +47,3 @@ typedef NS_ENUM(NSInteger, DZVideoPlayerViewControllerStyle) {
 
 @end
 
-
-
-
-@interface DZVideoPlayerViewControllerContainerView (Test)
-
-- (instancetype)initWithStyle:(DZVideoPlayerViewControllerStyle)style;
-
-- (instancetype)initWithNibNameToInitControllerWith:(NSString *)nibNameToInitControllerWith;
-
-
-@end

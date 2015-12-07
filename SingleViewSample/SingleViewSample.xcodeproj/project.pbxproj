@@ -64,6 +64,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		024041041C158C9100970019 /* PlaybackDefaultSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaybackDefaultSettings.h; sourceTree = "<group>"; };
 		02583A6E1C0BF6C700649671 /* SingleViewSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SingleViewSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02583A721C0BF6C700649671 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		02583A741C0BF6C700649671 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -180,14 +181,9 @@
 			isa = PBXGroup;
 			children = (
 				02583AD71C0C04C100649671 /* media */,
-				02583A741C0BF6C700649671 /* AppDelegate.h */,
-				02583A751C0BF6C700649671 /* AppDelegate.m */,
 				02583A771C0BF6C700649671 /* ViewController.h */,
 				02583A781C0BF6C700649671 /* ViewController.m */,
 				02583A7A1C0BF6C700649671 /* Main.storyboard */,
-				02583A7D1C0BF6C700649671 /* Assets.xcassets */,
-				02583A7F1C0BF6C700649671 /* LaunchScreen.storyboard */,
-				02583A821C0BF6C700649671 /* Info.plist */,
 				02583A711C0BF6C700649671 /* Supporting Files */,
 			);
 			path = SingleViewSample;
@@ -196,6 +192,11 @@
 		02583A711C0BF6C700649671 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				02583A741C0BF6C700649671 /* AppDelegate.h */,
+				02583A751C0BF6C700649671 /* AppDelegate.m */,
+				02583A7D1C0BF6C700649671 /* Assets.xcassets */,
+				02583A7F1C0BF6C700649671 /* LaunchScreen.storyboard */,
+				02583A821C0BF6C700649671 /* Info.plist */,
 				02583A721C0BF6C700649671 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -261,6 +262,7 @@
 				02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */,
 				02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */,
 				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
+				024041041C158C9100970019 /* PlaybackDefaultSettings.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
