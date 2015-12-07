@@ -412,29 +412,28 @@ static const NSString *PlayerStatusContext;
 @implementation DZVideoPlayerViewController (PlaybackStatus)
 
 - (NSTimeInterval)availableDuration {
-    NSTimeInterval result = 0;
-//    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
-//    
-//    if ([loadedTimeRanges count] > 0) {
-//        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
-//        Float64 startSeconds = CMTimeGetSeconds(timeRange.start);
-//        Float64 durationSeconds = CMTimeGetSeconds(timeRange.duration);
-//        result = startSeconds + durationSeconds;
-//    }
-    
+    NSTimeInterval result = -1;
+    if (self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying
+        || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePaused
+        || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared) {
+        result = self.cyberPlayer.duration;
+    }
+
     return result;
 }
 
 - (NSTimeInterval)currentPlaybackTime {
-    NSTimeInterval time = self.cyberPlayer.currentPlaybackTime;
-//    if (CMTIME_IS_VALID(time)) {
-//        return time.value / time.timescale;
-//    }
-    return 0;
+    NSTimeInterval result = -1;
+    if (self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying
+        || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePaused
+        || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared) {
+        result = self.cyberPlayer.currentPlaybackTime;
+    }
+    
+    return result;
 }
 
 - (BOOL)isPlaying {
-    
     return self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying;
 }
 
