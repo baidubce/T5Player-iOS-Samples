@@ -15,7 +15,6 @@
 #import "CyberplayerUtils.h"
 
 #import "DZVideoPlayerViewControllerDelegate.h"
-#import "DZPlayerView.h"
 #import "DZProgressIndicatorSlider.h"
 #import "DZVideoPlayerViewControllerContainerView.h"
 
@@ -24,7 +23,7 @@
 @interface DZVideoPlayerViewController : UIViewController
 
 // Interface Builder Outlets
-@property (weak, nonatomic) IBOutlet DZPlayerView *backgroundView;
+@property (weak, nonatomic) IBOutlet UIView *backgroundView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UIView *topToolbarView;
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
@@ -56,7 +55,6 @@
 //@property (strong, nonatomic) NSString * ak;
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil parrent:(DZVideoPlayerViewControllerContainerView *)parrentView ;
-
 @end
 
 
@@ -149,8 +147,8 @@
 #pragma mark - methods about playback control auto hide
 @interface DZVideoPlayerViewController (PlaybackKitAutoHide)
 
-- (void)startIdleCountdown;
-- (void)stopIdleCountdown;
+- (void)startAutoHideTImerCountdown;
+- (void)stopAutoHideTImerCountdown;
 - (void)hideControls;
 - (void)showControls;
 

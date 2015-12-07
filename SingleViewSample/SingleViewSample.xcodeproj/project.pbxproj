@@ -30,10 +30,8 @@
 		02583AC11C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */; };
 		02583AC21C0BFDBB00649671 /* DZVideoPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */; };
 		02583AD11C0BFDC900649671 /* DZPlayerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACB1C0BFDC900649671 /* DZPlayerButton.m */; };
-		02583AD21C0BFDC900649671 /* DZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACC1C0BFDC900649671 /* DZPlayerView.m */; };
 		02583AD31C0BFDC900649671 /* DZProgressIndicatorSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */; };
 		02583AD41C0BFDC900649671 /* DZVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */; };
-		02583AD51C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */; };
 		02583AD61C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */; };
 		02583AD91C0C04D200649671 /* Star_Wars.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 02583AD81C0C04D200649671 /* Star_Wars.mp4 */; };
 		02583AE51C0C8C0100649671 /* libASIHTTP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583ADE1C0C8C0100649671 /* libASIHTTP.a */; };
@@ -97,17 +95,13 @@
 		02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController_simple.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController_simple.xib; sourceTree = "<group>"; };
 		02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController.xib; sourceTree = "<group>"; };
 		02583AC31C0BFDC900649671 /* DZPlayerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerButton.h; path = PlaybackKit/src/DZPlayerButton.h; sourceTree = "<group>"; };
-		02583AC41C0BFDC900649671 /* DZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZPlayerView.h; path = PlaybackKit/src/DZPlayerView.h; sourceTree = "<group>"; };
 		02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZProgressIndicatorSlider.h; path = PlaybackKit/src/DZProgressIndicatorSlider.h; sourceTree = "<group>"; };
 		02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController.h; path = PlaybackKit/src/DZVideoPlayerViewController.h; sourceTree = "<group>"; };
-		02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerConfiguration.h; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.h; sourceTree = "<group>"; };
 		02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerContainerView.h; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.h; sourceTree = "<group>"; };
 		02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerDelegate.h; path = PlaybackKit/src/DZVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
 		02583ACB1C0BFDC900649671 /* DZPlayerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZPlayerButton.m; path = PlaybackKit/src/DZPlayerButton.m; sourceTree = "<group>"; };
-		02583ACC1C0BFDC900649671 /* DZPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZPlayerView.m; path = PlaybackKit/src/DZPlayerView.m; sourceTree = "<group>"; };
 		02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZProgressIndicatorSlider.m; path = PlaybackKit/src/DZProgressIndicatorSlider.m; sourceTree = "<group>"; };
 		02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewController.m; path = PlaybackKit/src/DZVideoPlayerViewController.m; sourceTree = "<group>"; };
-		02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerConfiguration.m; path = PlaybackKit/src/DZVideoPlayerViewControllerConfiguration.m; sourceTree = "<group>"; };
 		02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewControllerContainerView.m; path = PlaybackKit/src/DZVideoPlayerViewControllerContainerView.m; sourceTree = "<group>"; };
 		02583AD81C0C04D200649671 /* Star_Wars.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Star_Wars.mp4; sourceTree = "<group>"; };
 		02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerController.h; path = CyberPlayer/CyberPlayerController.h; sourceTree = "<group>"; };
@@ -260,14 +254,10 @@
 			children = (
 				02583AC31C0BFDC900649671 /* DZPlayerButton.h */,
 				02583ACB1C0BFDC900649671 /* DZPlayerButton.m */,
-				02583AC41C0BFDC900649671 /* DZPlayerView.h */,
-				02583ACC1C0BFDC900649671 /* DZPlayerView.m */,
 				02583AC51C0BFDC900649671 /* DZProgressIndicatorSlider.h */,
 				02583ACD1C0BFDC900649671 /* DZProgressIndicatorSlider.m */,
 				02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */,
 				02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */,
-				02583AC81C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.h */,
-				02583ACF1C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m */,
 				02583AC91C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.h */,
 				02583AD01C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m */,
 				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
@@ -457,11 +447,9 @@
 				02583A791C0BF6C700649671 /* ViewController.m in Sources */,
 				02583AD61C0BFDC900649671 /* DZVideoPlayerViewControllerContainerView.m in Sources */,
 				02583A761C0BF6C700649671 /* AppDelegate.m in Sources */,
-				02583AD21C0BFDC900649671 /* DZPlayerView.m in Sources */,
 				02583AD31C0BFDC900649671 /* DZProgressIndicatorSlider.m in Sources */,
 				02583AD11C0BFDC900649671 /* DZPlayerButton.m in Sources */,
 				02583A731C0BF6C700649671 /* main.m in Sources */,
-				02583AD51C0BFDC900649671 /* DZVideoPlayerViewControllerConfiguration.m in Sources */,
 				02583AD41C0BFDC900649671 /* DZVideoPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
