@@ -82,7 +82,7 @@
 - (IBAction)seek:(UISlider *)slider;
 - (IBAction)startSeeking:(id)sender;
 - (IBAction)endSeeking:(id)sender;
-- (IBAction)onDoneButtonTouched;
+- (IBAction)doneButtonTouched;
 - (IBAction)toggleFullscreen:(id)sender;
 
 @end
@@ -182,5 +182,6 @@
 - (void)onToggleFullscreen;
 - (void)onPlaybackStalled;
 - (void)onGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo;
+
 
 @end

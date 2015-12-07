@@ -133,8 +133,9 @@ static const NSString *PlayerStatusContext;
     //
     NSLog(@"DZVideoPlayerViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
     [self resignNotifications];
-    [self resignRemoteCommandCenter];
+    [self stop];
     [self resignPlaybackProgress];
+    [self resignRemoteCommandCenter];
     [self resetNowPlayingInfo];
     [super viewWillDisappear:animated];
 }
@@ -166,9 +167,17 @@ static const NSString *PlayerStatusContext;
     } else {
         
         if ([self isPlaying]) {
-            if (self.activityIndicatorView.isAnimating) {
-                [self.activityIndicatorView stopAnimating];
+            if (self.isSeeking) {
+                if (! self.activityIndicatorView.isAnimating) {
+                    [self.activityIndicatorView startAnimating];
+                }
+                
+            } else {
+                if (self.activityIndicatorView.isAnimating) {
+                    [self.activityIndicatorView stopAnimating];
+                }
             }
+            
             self.playButton.hidden = YES;
             self.playButton.enabled = NO;
             
@@ -176,17 +185,15 @@ static const NSString *PlayerStatusContext;
             self.pauseButton.enabled = YES;
         }
         else {
+            if (self.activityIndicatorView.isAnimating) {
+                [self.activityIndicatorView stopAnimating];
+            }
+            
             self.playButton.hidden = NO;
             self.playButton.enabled = YES;
             
             self.pauseButton.hidden = YES;
             self.pauseButton.enabled = NO;
-        }
-        
-        if (self.isSeeking) {
-            
-        } else {
-            
         }
         
         if (self.isShowFullscreenExpandAndShrinkButtonsEnabled) {
@@ -213,7 +220,6 @@ static const NSString *PlayerStatusContext;
             self.fullscreenShrinkButton.enabled = NO;
         }
     }
-    
 }
 
 #pragma mark - internal play commands
@@ -299,6 +305,7 @@ static const NSString *PlayerStatusContext;
 
 
 @implementation DZVideoPlayerViewController (PlaybackKitActions)
+
 - (void)setupActions {
 
     [self.playButton addTarget:self
@@ -330,7 +337,7 @@ static const NSString *PlayerStatusContext;
                      forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
 
     [self.doneButton addTarget:self
-                        action:@selector(onDoneButtonTouched)
+                        action:@selector(doneButtonTouched)
               forControlEvents:UIControlEventTouchUpInside];
 
 }
@@ -379,11 +386,10 @@ static const NSString *PlayerStatusContext;
     [self startAutoHideTimerCountdown];
 }
 
-- (IBAction)onDoneButtonTouched {
-    if ([self.delegate respondsToSelector:@selector(playerDoneButtonTouched)]) {
-        [self.delegate playerDoneButtonTouched];
-    }
+- (IBAction)doneButtonTouched {
+    [self stop];
     [self startAutoHideTimerCountdown];
+    [self onStop];
 }
 
 - (IBAction)toggleFullscreen:(id)sender {
@@ -404,7 +410,6 @@ static const NSString *PlayerStatusContext;
                                                  ofType:@"bundle"]];
     return bundle;
 }
-
 
 @end
 
@@ -561,12 +566,14 @@ static const NSString *PlayerStatusContext;
     NSLog(@"onCyberPlayerPlaybackDidFinishNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
     [self resignPlaybackProgress];
+    [self syncUI];
 }
 
 // On error
 - (void) onCyberPlayerPlaybackErrorNotification: (NSNotification*)notification {
     NSLog(@"onCyberPlayerPlaybackErrorNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+    [self syncUI];
 }
 
 // Playback status is changed
@@ -587,6 +594,7 @@ static const NSString *PlayerStatusContext;
     NSLog(@"onCyberPlayerSeekingDidFinishNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
     self.isSeeking = NO;
+    [self syncUI];
 }
 
 // Begin Caching
@@ -743,6 +751,7 @@ static const NSString *PlayerStatusContext;
         [self startAutoHideTimerCountdown];
     }
 }
+
 @end
 
 
@@ -806,7 +815,6 @@ static const NSString *PlayerStatusContext;
     [self onStop];
     [self updateNowPlayingInfo];
 }
-
 
 @end
 
