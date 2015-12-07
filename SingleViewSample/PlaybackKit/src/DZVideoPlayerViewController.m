@@ -20,9 +20,6 @@ static const NSString *PlayerStatusContext;
 }
 
 #pragma mark - Player Engine properties
-//@property (strong, nonatomic) CyberPlayerController* cyberPlayer;
-//@property (strong, nonatomic) AVPlayer *player;
-//@property (strong, nonatomic) AVPlayerItem *playerItem;
 
 @property (assign, nonatomic) CGRect initialFrame;
 @property (weak, nonatomic) DZVideoPlayerViewControllerContainerView* parrentView;
@@ -31,7 +28,7 @@ static const NSString *PlayerStatusContext;
 @property (assign, nonatomic) BOOL isControlsHidden;
 
 @property (strong, nonatomic) NSTimer *autoHideTImer;
-
+@property (strong, nonatomic) NSTimer *progressTimer;
 // Player time observer target
 @property (strong, nonatomic) id playerTimeObservationTarget;
 
@@ -39,10 +36,10 @@ static const NSString *PlayerStatusContext;
 @property (strong, nonatomic) id playCommandTarget;
 @property (strong, nonatomic) id pauseCommandTarget;
 
+@property (nonatomic, assign) NSTimeInterval lastPlayDuration;
+
 // has topToolbarView and bottomToolbarView by default
 @property (strong, nonatomic) NSMutableArray *viewsToHideOnIdle;
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)time;
 
 /*
  * Sync playback state with GUI.
@@ -93,9 +90,9 @@ static const NSString *PlayerStatusContext;
     if (self.bottomToolbarView) {
         [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
     }
+    self.sliderProgress.value = 0;
     
     [self setupActions];
-//    [self setupAudioSession];
     [self setupCyberPlayer];
     [self setupRemoteCommandCenter];
     [self registerGestureRecognizer];
@@ -186,6 +183,12 @@ static const NSString *PlayerStatusContext;
             self.pauseButton.enabled = NO;
         }
         
+        if (self.isSeeking) {
+            
+        } else {
+            
+        }
+        
         if (self.isShowFullscreenExpandAndShrinkButtonsEnabled) {
             if (self.isFullscreen) {
                 self.fullscreenExpandButton.hidden = YES;
@@ -266,23 +269,6 @@ static const NSString *PlayerStatusContext;
     [super prepareForSegue: segue sender: sender];
 }
 
-#pragma mark - Helpers
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)time {
-    NSString *string = [NSString stringWithFormat:@"%02li:%02li:%02li",
-                        lround(floor(time / 3600.)) % 100,
-                        lround(floor(time / 60.)) % 60,
-                        lround(floor(time)) % 60];
-    
-    NSString *extraZeroes = @"00:";
-    
-    if ([string hasPrefix:extraZeroes]) {
-        string = [string substringFromIndex:extraZeroes.length];
-    }
-    
-    return string;
-}
-
 @end
 
 
@@ -295,6 +281,7 @@ static const NSString *PlayerStatusContext;
     if (self.cyberPlayer == nil) {
         self.cyberPlayer = [[CyberPlayerController alloc] init];
         [self.cyberPlayer setAccessKey:self.parrentView.ak];
+        [self setupNotifications];
     }
     
     // setup CyberPlayer's View
@@ -304,113 +291,8 @@ static const NSString *PlayerStatusContext;
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
     // register notification handler
-    [self setupNotifications];
-
-//    self.player = [[AVPlayer alloc] initWithPlayerItem:nil];
-//
-
     [self setupPlaybackProgress];
     
-//    self.playerView.player = self.player;
-//    self.playerView.videoFillMode = AVLayerVideoGravityResizeAspect;
-    
-}
-
-- (void)setupAudioSession {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    
-    NSError *setCategoryError = nil;
-    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-    if (!success) { /* handle the error condition */ }
-    
-    NSError *activationError = nil;
-    success = [audioSession setActive:YES error:&activationError];
-    if (!success) { /* handle the error condition */ }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleAVAudioSessionInterruptionNotification:)
-                                                 name:AVAudioSessionInterruptionNotification
-                                               object:audioSession];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleAVAudioSessionRouteChangeNotification:)
-                                                 name:AVAudioSessionRouteChangeNotification
-                                               object:audioSession];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleAVAudioSessionMediaServicesWereLostNotification:)
-                                                 name:AVAudioSessionMediaServicesWereLostNotification
-                                               object:audioSession];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleAVAudioSessionMediaServicesWereResetNotification:)
-                                                 name:AVAudioSessionMediaServicesWereResetNotification
-                                               object:audioSession];
-}
-
-
-@end
-
-
-#pragma mark - Remote Control Events
-
-@implementation DZVideoPlayerViewController (LockScreenControl)
-
-- (void)setupRemoteControlEvents {
-    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-    [self becomeFirstResponder];
-}
-
-- (void)setupRemoteCommandCenter {
-    DZVideoPlayerViewController __weak *welf = self;
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    self.playCommandTarget = [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        [welf play];
-        return MPRemoteCommandHandlerStatusSuccess;
-    }];
-    self.pauseCommandTarget = [commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        [welf pause];
-        return MPRemoteCommandHandlerStatusSuccess;
-    }];
-}
-
-- (void)resignRemoteCommandCenter {
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    [commandCenter.playCommand removeTarget:self.playCommandTarget];
-    [commandCenter.pauseCommand removeTarget:self.pauseCommandTarget];
-    self.playCommandTarget = nil;
-    self.pauseCommandTarget = nil;
-}
-
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    //if it is a remote control event handle it correctly
-    if (event.type == UIEventTypeRemoteControl) {
-        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
-            [self play];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
-            [self pause];
-        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
-            [self togglePlayPause];
-        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            [self onRequireNextTrack];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            [self onRequirePreviousTrack];
-        }
-    }
-}
-
-- (void)updateNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
-}
-
-- (void)resetNowPlayingInfo {
-    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
-}
-
-- (NSMutableDictionary *)gatherNowPlayingInfo {
-    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
-//    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-//    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-//    [self onGatherNowPlayingInfo:nowPlayingInfo];
-    return nowPlayingInfo;
 }
 
 @end
@@ -435,15 +317,15 @@ static const NSString *PlayerStatusContext;
                                     action:@selector(toggleFullscreen:)
                           forControlEvents:UIControlEventTouchUpInside];
 
-    [self.progressIndicator addTarget:self
+    [self.sliderProgress addTarget:self
                                action:@selector(seek:)
                      forControlEvents:UIControlEventValueChanged];
     
-    [self.progressIndicator addTarget:self
+    [self.sliderProgress addTarget:self
                                action:@selector(startSeeking:)
                      forControlEvents:UIControlEventTouchDown];
     
-    [self.progressIndicator addTarget:self
+    [self.sliderProgress addTarget:self
                                action:@selector(endSeeking:)
                      forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
 
@@ -477,25 +359,31 @@ static const NSString *PlayerStatusContext;
 }
 
 - (IBAction)seek:(UISlider *)slider {
-//    int timescale = self.playerItem.asset.duration.timescale;
-//    float time = slider.value * (self.playerItem.asset.duration.value / timescale);
-//    [self.player seekToTime:CMTimeMakeWithSeconds(time, timescale)];
-}
-
-- (IBAction)startSeeking:(id)sender {
-    [self stopAutoHideTimerCountdown];
-    self.isSeeking = YES;
-}
-
-- (IBAction)endSeeking:(id)sender {
+    NSLog(@" on seek: %f", slider.value);
+    if (self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying
+     || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePaused
+     || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared) {
+        
+        self.isSeeking = YES;
+        [self.cyberPlayer seekTo:slider.value * self.cyberPlayer.duration];
+    }
     [self startAutoHideTimerCountdown];
-    self.isSeeking = NO;
+    
+}
+
+- (IBAction)startSeeking:(UISlider *)slider {
+    [self startAutoHideTimerCountdown];
+}
+
+- (IBAction)endSeeking:(UISlider *)slider {
+    [self startAutoHideTimerCountdown];
 }
 
 - (IBAction)onDoneButtonTouched {
     if ([self.delegate respondsToSelector:@selector(playerDoneButtonTouched)]) {
         [self.delegate playerDoneButtonTouched];
     }
+    [self startAutoHideTimerCountdown];
 }
 
 - (IBAction)toggleFullscreen:(id)sender {
@@ -643,97 +531,82 @@ static const NSString *PlayerStatusContext;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+// On AV sync difference
 - (void) onCyberPlayerGotAVSyncDiffNotification: (NSNotification*)notification {
 #ifdef __DEBUG__
     NSLog(@"onCyberPlayerGotAVSyncDiffNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
 #endif
 }
 
-- (void) onCyberPlayerGotCachePercentNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerGotCachePercentNotification: %@, CyberPlayer's status = %i", notification, self.cyberPlayer.playbackState);
+// On play quality
+- (void) onCyberPlayerGotPlayQualityNotification: (NSNotification*)notification {
+    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
 }
 
+// On Network Bitrate
 - (void) onCyberPlayerGotNetworkBitrateNotification: (NSNotification*)notification {
     NSLog(@"onCyberPlayerGotNetworkBitrateNotification: %@, CyberPlayer's status = %li", notification, (long)self.cyberPlayer.playbackState);
-    
 }
 
-- (void) onCyberPlayerGotPlayQualityNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %i", notification, self.cyberPlayer.playbackState);
-    
-}
-
+// Ready to play
 - (void) onCyberPlayerLoadDidPreparedNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerLoadDidPreparedNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerLoadDidPreparedNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
+    [self setupPlaybackProgress];
     [self syncUI];
-        // start progress timer
-        // timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerHandler:) userInfo:nil repeats:YES];
-
 }
 
+// Finish playing
 - (void) onCyberPlayerPlaybackDidFinishNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerPlaybackDidFinishNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerPlaybackDidFinishNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
+    [self resignPlaybackProgress];
 }
 
+// On error
 - (void) onCyberPlayerPlaybackErrorNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerPlaybackErrorNotification: %@, CyberPlayer's status = %i", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerPlaybackErrorNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
 }
 
+// Playback status is changed
 - (void) onCyberPlayerPlaybackStateDidChangeNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerPlaybackStateDidChangeNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerPlaybackStateDidChangeNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
     [self syncUI];
-
 }
 
+// Only Audio
 - (void) onCyberPlayerMeidaTypeAudioOnlyNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerMeidaTypeAudioOnlyNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
-    
+    NSLog(@"onCyberPlayerMeidaTypeAudioOnlyNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
 }
 
+// Seek Finished
 - (void) onCyberPlayerSeekingDidFinishNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerSeekingDidFinishNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerSeekingDidFinishNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
+    self.isSeeking = NO;
 }
 
+// Begin Caching
 - (void) onCyberPlayerStartCachingNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerStartCachingNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+    NSLog(@"onCyberPlayerStartCachingNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
+}
+
+// On Cache Percent
+- (void) onCyberPlayerGotCachePercentNotification: (NSNotification*)notification {
+    NSLog(@"onCyberPlayerGotCachePercentNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
 }
 
 - (void) onCBPUOnSniffCompletionNotification: (NSNotification*)notification {
-    NSLog(@"onCBPUOnSniffCompletionNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
-    
+    NSLog(@"onCBPUOnSniffCompletionNotification: %@", notification);
 }
 
 - (void) onCBPUOnSniffErrorNotification: (NSNotification*)notification {
-    NSLog(@"onCBPUOnSniffErrorNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
-    
-}
-
-- (void)handleAVPlayerItemDidPlayToEndTime:(NSNotification *)notification {
-    [self stop];
-    [self onDidPlayToEndTime];
-}
-
-- (void)handleAVPlayerItemFailedToPlayToEndTime:(NSNotification *)notification {
-    [self stop];
-    [self onFailedToPlayToEndTime];
-}
-
-- (void)handleAVPlayerItemPlaybackStalled:(NSNotification *)notification {
-    [self pause];
-    [self.activityIndicatorView startAnimating];
-    [self onPlaybackStalled];
-}
-
-- (void)handleApplicationDidEnterBackground:(NSNotification *)notification {
-    if (self.isBackgroundPlaybackEnabled) {
-//        self.playerView.player = nil;
-    }
-}
-
-- (void)handleApplicationDidBecomeActive:(NSNotification *)notification {
-    if (self.isBackgroundPlaybackEnabled) {
-//        self.playerView.player = self.player;
-    }
+    NSLog(@"onCBPUOnSniffErrorNotification: %@", notification);
 }
 
 @end
@@ -814,55 +687,41 @@ static const NSString *PlayerStatusContext;
 
 @implementation DZVideoPlayerViewController (PlaybackProgroess)
 
-- (void)updateProgressIndicator:(id)sender {
-//    CGFloat duration = CMTimeGetSeconds(self.playerItem.asset.duration);
-//    
-//    if (duration == 0 || isnan(duration)) {
-//        // Video is a live stream
-//        self.progressIndicator.hidden = YES;
-//        [self.currentTimeLabel setText:nil];
-//        [self.remainingTimeLabel setText:nil];
-//    }
-//    else {
-//        self.progressIndicator.hidden = NO;
-//        
-//        CGFloat current;
-//        if (self.isSeeking) {
-//            current = self.progressIndicator.value * duration;
-//        }
-//        else {
-//            // Otherwise, use the actual video position
-//            current = CMTimeGetSeconds(self.player.currentTime);
-//        }
-//        
-//        CGFloat left = duration - current;
-//        
-//        [self.progressIndicator setValue:(current / duration)];
-//        [self.progressIndicator setSecondaryValue:([self availableDuration] / duration)];
-//        
-//        // Set time labels
-//        
-//        NSString *currentTimeString = current > 0 ? [self stringFromTimeInterval:current] : @"00:00";
-//        NSString *remainingTimeString = left > 0 ? [self stringFromTimeInterval:left] : @"00:00";
-//        
-//        [self.currentTimeLabel setText:currentTimeString];
-//        [self.remainingTimeLabel setText:[NSString stringWithFormat:@"-%@", remainingTimeString]];
-//        
-//    }
+- (void)updateProgressIndicator:(NSTimer*)timer {
+    
+    NSTimeInterval currentTime = self.cyberPlayer.currentPlaybackTime;
+    NSTimeInterval allSecond = self.cyberPlayer.duration;
+
+    self.currentTimeLabel.text = [TimeFormatter convertSecond2HHMMSS:currentTime];
+    self.remainingTimeLabel.text = [TimeFormatter convertSecond2HHMMSS:allSecond - currentTime];
+    self.sliderProgress.value = currentTime / allSecond;
 }
 
 - (void)setupPlaybackProgress {
-    DZVideoPlayerViewController __weak *welf = self;
-//    self.playerTimeObservationTarget = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1)  queue:nil usingBlock:^(CMTime time) {
-//        [welf updateProgressIndicator:welf];
-//        [welf syncUI];
-//    }];
+    // ensure this method is called in main thread
+    if ([[NSThread currentThread] isMainThread]) {
+        if ([self.progressTimer isValid]) {
+            [self.progressTimer invalidate];
+            self.progressTimer = nil;
+        }
+        self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                              target:self
+                                                            selector:@selector(updateProgressIndicator:)
+                                                            userInfo:nil
+                                                             repeats:YES];
+    } else {
+        [self performSelectorOnMainThread:@selector(setupPlaybackProgress)
+                               withObject:nil
+                            waitUntilDone:NO];
+    }
     
 }
 
 - (void)resignPlaybackProgress {
-//    [self.player removeTimeObserver:self.playerTimeObservationTarget];
-//    self.playerTimeObservationTarget = nil;
+    if ([self.progressTimer isValid]) {
+        [self.progressTimer invalidate];
+    }
+    self.progressTimer = nil;
 }
 
 @end
@@ -892,7 +751,7 @@ static const NSString *PlayerStatusContext;
 @implementation DZVideoPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startAutoHideTimerCountdown {
-    if (self.autoHideTImer) {
+    if (self.autoHideTImer.isValid) {
         [self.autoHideTImer invalidate];
     }
     if (self.isHideControlsOnIdleEnabled) {
@@ -942,8 +801,7 @@ static const NSString *PlayerStatusContext;
 }
 
 - (void)stop {
-    [self.cyberPlayer pause];
-    [self.cyberPlayer stop];
+    [self doStop];
     [self stopAutoHideTimerCountdown];
     [self syncUI];
     [self onStop];
@@ -952,3 +810,71 @@ static const NSString *PlayerStatusContext;
 
 
 @end
+
+#pragma mark - Remote Control Events
+
+@implementation DZVideoPlayerViewController (LockScreenControl)
+
+- (void)setupRemoteControlEvents {
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self becomeFirstResponder];
+}
+
+- (void)setupRemoteCommandCenter {
+    DZVideoPlayerViewController __weak *welf = self;
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    self.playCommandTarget = [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+        [welf play];
+        return MPRemoteCommandHandlerStatusSuccess;
+    }];
+    self.pauseCommandTarget = [commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+        [welf pause];
+        return MPRemoteCommandHandlerStatusSuccess;
+    }];
+}
+
+- (void)resignRemoteCommandCenter {
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+    [commandCenter.playCommand removeTarget:self.playCommandTarget];
+    [commandCenter.pauseCommand removeTarget:self.pauseCommandTarget];
+    self.playCommandTarget = nil;
+    self.pauseCommandTarget = nil;
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+    //if it is a remote control event handle it correctly
+    if (event.type == UIEventTypeRemoteControl) {
+        if (event.subtype == UIEventSubtypeRemoteControlPlay) {
+            [self play];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPause) {
+            [self pause];
+        } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
+            [self togglePlayPause];
+        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
+            [self onRequireNextTrack];
+        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
+            [self onRequirePreviousTrack];
+        }
+    }
+}
+
+- (void)updateNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [self gatherNowPlayingInfo];
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
+}
+
+- (void)resetNowPlayingInfo {
+    [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+}
+
+- (NSMutableDictionary *)gatherNowPlayingInfo {
+    NSMutableDictionary *nowPlayingInfo = [[NSMutableDictionary alloc] init];
+    //    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.player.rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    //    [nowPlayingInfo setObject:[NSNumber numberWithDouble:self.currentPlaybackTime] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    //    [self onGatherNowPlayingInfo:nowPlayingInfo];
+    return nowPlayingInfo;
+}
+
+@end
+
+

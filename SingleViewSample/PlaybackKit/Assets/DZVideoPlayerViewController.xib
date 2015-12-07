@@ -16,7 +16,6 @@
                 <outlet property="fullscreenShrinkButton" destination="KjX-5t-jdJ" id="XpY-VP-1aT"/>
                 <outlet property="pauseButton" destination="9zm-dn-EbA" id="2rU-qn-FfY"/>
                 <outlet property="playButton" destination="ArK-79-Cut" id="i5f-RL-U6s"/>
-                <outlet property="progressIndicator" destination="LWi-Wz-NQ7" id="J7g-Ms-5pY"/>
                 <outlet property="remainingTimeLabel" destination="YiH-9G-eQ4" id="FZ3-SS-2Jt"/>
                 <outlet property="topToolbarView" destination="OTK-4W-YjV" id="z5N-bX-sVT"/>
                 <outlet property="view" destination="iN0-l3-epB" id="5lv-e0-0dE"/>

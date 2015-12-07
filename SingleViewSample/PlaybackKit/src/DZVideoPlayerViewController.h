@@ -17,6 +17,7 @@
 #import "DZVideoPlayerViewControllerDelegate.h"
 #import "DZProgressIndicatorSlider.h"
 #import "DZVideoPlayerViewControllerContainerView.h"
+#import "TimeFormatter.h"
 
 @class DZVideoPlayerViewControllerContainerView;
 
@@ -28,11 +29,15 @@
 @property (weak, nonatomic) IBOutlet UIView *topToolbarView;
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
+
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UIButton *pauseButton;
 @property (weak, nonatomic) IBOutlet DZProgressIndicatorSlider *progressIndicator;
+
+@property (weak, nonatomic) IBOutlet UISlider *sliderProgress;
 @property (weak, nonatomic) IBOutlet UILabel *currentTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *remainingTimeLabel;
+
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenExpandButton;
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenShrinkButton;
 
@@ -70,7 +75,7 @@
 #pragma mark - Action methods for control kits
 @interface DZVideoPlayerViewController (PlaybackKitActions)
 
--  (void)setupActions;
+- (void)setupActions;
 - (IBAction)play;
 - (IBAction)pause;
 - (IBAction)togglePlayPause;
@@ -88,7 +93,6 @@
 @interface DZVideoPlayerViewController (VideoEngine)
 
 - (void)setupCyberPlayer;
-- (void)setupAudioSession;
 
 @end
 
@@ -160,11 +164,6 @@
 
 - (void)setupNotifications;
 - (void)resignNotifications;
-
-- (void)onCyberPlayerLoadDidPreparedNotification: (NSNotification*)aNotification;
-
-- (void)handleApplicationDidEnterBackground:(NSNotification *)notification;
-- (void)handleApplicationDidBecomeActive:(NSNotification *)notification;
 
 @end
 
