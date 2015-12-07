@@ -27,6 +27,9 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;0123456789abcdef0123456789abcdef&quot;"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="style">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bav-IP-l1q">

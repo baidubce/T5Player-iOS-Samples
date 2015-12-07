@@ -34,7 +34,7 @@
     
 //    NSString* ak = @"sssssssssssssssssssssssssss";
 //    [videoPlayerViewController.cyberPlayer setAccessKey:ak];
-    [videoPlayerViewController prepareAndPlayAutomatically:YES];
+//    [videoPlayerViewController prepareAndPlayAutomatically:YES];
 
 }
 
