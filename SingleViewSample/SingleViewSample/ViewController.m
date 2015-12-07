@@ -43,6 +43,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    NSLog(@"ViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
+}
+
+- (void) dealloc {
+    NSLog(@"ViewController dealloc(), \n %@", [NSThread callStackSymbols]);
+}
 @end
 
 
