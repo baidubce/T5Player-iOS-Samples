@@ -98,7 +98,6 @@ static const NSString *PlayerStatusContext;
 //    [self setupAudioSession];
     [self setupCyberPlayer];
     [self setupRemoteCommandCenter];
-    [self registerKVO];
     [self registerGestureRecognizer];
     [self syncUI];
 }
@@ -131,18 +130,12 @@ static const NSString *PlayerStatusContext;
     [self setupRemoteControlEvents];
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
+    // stop playback, save current time,
+    // unregister notification, KVO,
+    //
+    NSLog(@"DZVideoPlayerViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
     [self resignNotifications];
-    [self resignKVO];
     [self resignRemoteCommandCenter];
     [self resignPlaybackProgress];
     [self resetNowPlayingInfo];
@@ -152,7 +145,6 @@ static const NSString *PlayerStatusContext;
 - (void)dealloc {
     NSLog(@"DZVideoPlayerViewController dealloc(), \n %@", [NSThread callStackSymbols]);
     [self resignNotifications];
-    [self resignKVO];
     [self resignRemoteCommandCenter];
     [self resignPlaybackProgress];
     [self resetNowPlayingInfo];
@@ -163,7 +155,6 @@ static const NSString *PlayerStatusContext;
 }
 
 #pragma mark - Kit Management
-
 /*
  * This method should be called in main thread
  */
@@ -222,6 +213,8 @@ static const NSString *PlayerStatusContext;
     
 }
 
+#pragma mark - internal play commands
+
 - (void) doPlay {
     
     if(self.videoURL != nil) {
@@ -231,6 +224,7 @@ static const NSString *PlayerStatusContext;
             case CBPMoviePlaybackStateInterrupted:
                 self.cyberPlayer.contentURL = self.videoURL;
                 self.cyberPlayer.shouldAutoplay = YES;
+                
                 [self.cyberPlayer prepareToPlay];
                 [self.activityIndicatorView startAnimating];
                 [self syncUI];
@@ -238,15 +232,14 @@ static const NSString *PlayerStatusContext;
                 
             case CBPMoviePlaybackStatePaused:
             case CBPMoviePlaybackStatePrepared:
-                //如果当前播放视频已经暂停，重新开始播放。
                 [self.cyberPlayer start];
+                [self syncUI];
                 break;
                 
             case CBPMoviePlaybackStatePlaying:
                 break;
                 
             default:
-                //如果当前正在播放视频时，暂停播放。
                 break;
         }
     }
@@ -259,54 +252,19 @@ static const NSString *PlayerStatusContext;
     }
 }
 
+- (void) doStop {
+    if (self.cyberPlayer.playbackState != CBPMoviePlaybackStateStopped) {
+        [self.cyberPlayer stop];
+        [self syncUI];
+    }
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [super prepareForSegue: segue sender: sender];
 }
-
-#pragma mark - playback engine KVO
-
-- (void)registerKVO {
-    //    [self.player addObserver:self forKeyPath:@"rate"
-    //                     options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:&PlayerRateContext];
-    //
-    //    [self.player addObserver:self forKeyPath:@"status"
-    //                     options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:&PlayerStatusContext];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
-    DZVideoPlayerViewController __weak *welf = self;
-    if (context == &ItemStatusContext) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-                           [welf syncUI];
-                       });
-        
-    } else if (context == &PlayerRateContext) {
-        float rate = [change[NSKeyValueChangeNewKey] floatValue];
-        dispatch_async(dispatch_get_main_queue(), ^{
-                           if (rate > 0) {
-                               [welf.activityIndicatorView stopAnimating];
-                           }
-                       });
-        
-    } else if (context == &PlayerStatusContext) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-                           [welf syncUI];
-                       });
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
-- (void)resignKVO {
-//    [self.playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
-//    [self.player removeObserver:self forKeyPath:@"rate" context:&PlayerRateContext];
-//    [self.player removeObserver:self forKeyPath:@"status" context:&PlayerStatusContext];
-}
-
 
 #pragma mark - Helpers
 
@@ -324,7 +282,6 @@ static const NSString *PlayerStatusContext;
     
     return string;
 }
-
 
 @end
 
