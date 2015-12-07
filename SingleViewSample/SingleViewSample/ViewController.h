@@ -11,8 +11,6 @@
 
 @interface ViewController : UIViewController {
 }
-- (IBAction)click:(id)sender;
-
 
 @end
 
