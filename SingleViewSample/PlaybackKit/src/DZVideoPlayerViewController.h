@@ -32,7 +32,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UIButton *pauseButton;
-@property (weak, nonatomic) IBOutlet DZProgressIndicatorSlider *progressIndicator;
 
 @property (weak, nonatomic) IBOutlet UISlider *sliderProgress;
 @property (weak, nonatomic) IBOutlet UILabel *currentTimeLabel;

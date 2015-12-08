@@ -26,9 +26,9 @@
                                     <constraint firstAttribute="width" secondItem="5Ky-cd-1bc" secondAttribute="height" multiplier="16:9" id="V1c-j8-m0q"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;9ea040b91e974376a28367f23721e6fb&quot;"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;5976ebbb80ff49e7984bb3c1061a657d&quot;"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="style">
-                                        <integer key="value" value="1"/>
+                                        <integer key="value" value="0"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
