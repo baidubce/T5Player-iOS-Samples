@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -19,14 +18,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ky-cd-1bc" customClass="DZVideoPlayerViewControllerContainerView">
-                                <rect key="frame" x="-4" y="28" width="328" height="185"/>
+                            <view hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hP3-Kj-mVa">
+                                <rect key="frame" x="-4" y="10" width="328" height="38"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="5Ky-cd-1bc" secondAttribute="height" multiplier="16:9" id="d1o-eM-Pez"/>
-                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ky-cd-1bc" customClass="DZVideoPlayerViewControllerContainerView">
+                                <rect key="frame" x="-8" y="56" width="336" height="189"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;0123456789abcdef0123456789abcdef&quot;"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;9ea040b91e974376a28367f23721e6fb&quot;"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="style">
                                         <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
@@ -35,11 +35,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="5Ky-cd-1bc" secondAttribute="trailing" constant="-20" id="7cA-wg-k5d"/>
-                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Frp-xi-JgJ"/>
-                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="P1v-xo-2L1"/>
+                            <constraint firstItem="hP3-Kj-mVa" firstAttribute="centerX" secondItem="5Ky-cd-1bc" secondAttribute="centerX" id="3vm-yG-XCg"/>
+                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BR4-8w-XfU"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="5Ky-cd-1bc" secondAttribute="bottom" constant="323" id="FW6-sU-KHO"/>
+                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-24" id="LPR-KK-13X"/>
+                            <constraint firstItem="hP3-Kj-mVa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="c2v-Lm-heQ"/>
+                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="top" secondItem="hP3-Kj-mVa" secondAttribute="bottom" constant="8" symbolic="YES" id="etQ-eL-oNM"/>
+                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="56" id="gwC-xj-hnZ"/>
+                            <constraint firstItem="hP3-Kj-mVa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="ycA-e1-pVo"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="playbackContainerView" destination="5Ky-cd-1bc" id="Wwu-KE-IEx"/>

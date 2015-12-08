@@ -25,12 +25,12 @@
     DZVideoPlayerViewController *videoPlayerViewController = self.playbackContainerView.videoPlayerViewController;
     videoPlayerViewController.delegate = self;
 
-    NSString* videoAddress = @"http://mvod.sctv.com:60088/Features/test/shinyv/2015/08/27/d600878c_be8c_49ea_94c3_622ecf312928_676100.mp4";
+    NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
 //    NSString* videoAddress = @"http://hz01-plattech-rdqa00.hz01.baidu.com:8008/caselist/华尔街之狼.m4v";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
 
     NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
-    videoPlayerViewController.videoURL = localVideo;
+    videoPlayerViewController.videoURL = remoteVideo;
     
 //    NSString* ak = @"sssssssssssssssssssssssssss";
 //    [videoPlayerViewController.cyberPlayer setAccessKey:ak];

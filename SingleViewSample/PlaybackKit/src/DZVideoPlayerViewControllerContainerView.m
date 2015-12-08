@@ -67,7 +67,7 @@
     [self addSubview:self.videoPlayerViewController.view];
     
     // bind the size of player's view to parrent view
-    NSDictionary *viewsDictionary = @{@"playerView":self.videoPlayerViewController.cyberPlayer.view, @"parrentView":self};
+    NSDictionary *viewsDictionary = @{@"playerView":self.videoPlayerViewController.view, @"parrentView":self};
     NSMutableArray *constraintsArray = [[NSMutableArray alloc] init];
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
                                            constraintsWithVisualFormat:@"H:[playerView(==parrentView)]"

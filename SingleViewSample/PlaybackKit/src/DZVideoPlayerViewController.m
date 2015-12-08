@@ -165,7 +165,6 @@ static const NSString *PlayerStatusContext;
         });
         
     } else {
-        
         if ([self isPlaying]) {
             if (self.isSeeking) {
                 if (! self.activityIndicatorView.isAnimating) {
@@ -790,11 +789,9 @@ static const NSString *PlayerStatusContext;
 
 - (void)showControls {
     NSArray *views = self.viewsToHideOnIdle;
-    [UIView animateWithDuration:0.3f animations:^{
-        for (UIView *view in views) {
-            view.alpha = 1.0;
-        }
-    }];
+    for (UIView *view in views) {
+        view.alpha = 1.0;
+    }
     self.isControlsHidden = NO;
     [self startAutoHideTimerCountdown];
 }
