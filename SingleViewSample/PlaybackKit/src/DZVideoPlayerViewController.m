@@ -372,6 +372,7 @@ static const NSString *PlayerStatusContext;
         
         self.isSeeking = YES;
         [self.cyberPlayer seekTo:slider.value * self.cyberPlayer.duration];
+        [self.activityIndicatorView startAnimating];
     }
     [self startAutoHideTimerCountdown];
     
@@ -694,7 +695,9 @@ static const NSString *PlayerStatusContext;
 @implementation DZVideoPlayerViewController (PlaybackProgroess)
 
 - (void)updateProgressIndicator:(NSTimer*)timer {
-    
+    if (self.isSeeking) {
+        return;
+    }
     NSTimeInterval currentTime = self.cyberPlayer.currentPlaybackTime;
     NSTimeInterval allSecond = self.cyberPlayer.duration;
 
