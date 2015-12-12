@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "PlaybackDefaultSettings.h"
 
 @interface AppDelegate ()
 
@@ -18,7 +19,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     NSLog(@"Screen size: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
-//    [NSUserDefaults standardUserDefaults] 
+    NSDictionary* cyberplayerConfiguration = @{
+                                               CYBERPLAYER_NIB_FILE_NAME : @"DZVideoPlayerViewController",
+                                                  CYBERPLAYER_ACCESS_KEY : @"9ea040b91e974376a28367f23721e6fb"
+                                               };
+    [[NSUserDefaults standardUserDefaults] setValuesForKeysWithDictionary:cyberplayerConfiguration];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     return YES;
 }
 

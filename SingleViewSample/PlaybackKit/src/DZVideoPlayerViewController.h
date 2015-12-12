@@ -15,11 +15,8 @@
 #import "CyberplayerUtils.h"
 
 #import "DZVideoPlayerViewControllerDelegate.h"
-#import "DZProgressIndicatorSlider.h"
-#import "DZVideoPlayerViewControllerContainerView.h"
 #import "TimeFormatter.h"
-
-@class DZVideoPlayerViewControllerContainerView;
+#import "PlaybackDefaultSettings.h"
 
 @interface DZVideoPlayerViewController : UIViewController
 
@@ -56,9 +53,8 @@
 
 @property (strong, nonatomic) NSURL *videoURL;
 
-//@property (strong, nonatomic) NSString * ak;
+- (void) loadConfiguration;
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil parrent:(DZVideoPlayerViewControllerContainerView *)parrentView ;
 @end
 
 

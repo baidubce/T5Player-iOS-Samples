@@ -22,13 +22,13 @@ static const NSString *PlayerStatusContext;
 #pragma mark - Player Engine properties
 
 @property (assign, nonatomic) CGRect initialFrame;
-@property (weak, nonatomic) DZVideoPlayerViewControllerContainerView* parrentView;
 
 @property (assign, nonatomic) BOOL isSeeking;
 @property (assign, nonatomic) BOOL isControlsHidden;
 
 @property (strong, nonatomic) NSTimer *autoHideTImer;
 @property (strong, nonatomic) NSTimer *progressTimer;
+
 // Player time observer target
 @property (strong, nonatomic) id playerTimeObservationTarget;
 
@@ -52,27 +52,14 @@ static const NSString *PlayerStatusContext;
 
 @end
 
-
 @implementation DZVideoPlayerViewController
 
 #pragma mark - ViewController Lifecycle Override
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil
-                         bundle:(NSBundle *)nibBundleOrNil
-                      parrent:(DZVideoPlayerViewControllerContainerView*) parrentView {
-    NSLog(@"DZVideoPlayerViewController begin with initWithNibName: %@", nibNameOrNil);
-
-    // set default configuration properties before loading nib
-    _parrentView = parrentView;
-    _viewsToHideOnIdle = [[NSMutableArray alloc] init];
-    _delayBeforeHidingViewsOnIdle = 3.0;
-    _isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
-    _isHideControlsOnIdleEnabled = YES;
-    _isBackgroundPlaybackEnabled = NO;
-    
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    NSLog(@"DZVideoPlayerViewController end with initWithNibName: %@", nibNameOrNil);
-    return self;
+- (void) loadConfiguration {
+    NSBundle *bundle = [DZVideoPlayerViewController bundle];
+    NSString* nibfile = [[NSUserDefaults standardUserDefaults] stringForKey: CYBERPLAYER_NIB_FILE_NAME];
+    [self initWithNibName:nibfile bundle:bundle];
 }
 
 /*
@@ -81,9 +68,20 @@ static const NSString *PlayerStatusContext;
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"DZVideoPlayerViewController viewDidLoad.");
-    [self setupFrameWithParrentView];
     
+    NSLog(@"DZVideoPlayerViewController viewDidLoad.");
+    NSLog(@"DZVideoPlayerViewController root frame is :%@", NSStringFromCGRect(self.view.frame));
+    NSLog(@"DZVideoPlayerViewController background frame is :%@", NSStringFromCGRect(self.backgroundView.frame));
+    self.initialFrame = self.view.frame;
+    
+    // set default configuration properties before loading nib
+    _isFullscreen = NO;
+    _viewsToHideOnIdle = [[NSMutableArray alloc] init];
+    _delayBeforeHidingViewsOnIdle = 3.0;
+    _isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
+    _isHideControlsOnIdleEnabled = YES;
+    _isBackgroundPlaybackEnabled = NO;
+
     if (self.topToolbarView) {
         [self.viewsToHideOnIdle addObject:self.topToolbarView];
     }
@@ -97,29 +95,73 @@ static const NSString *PlayerStatusContext;
     [self setupRemoteCommandCenter];
     [self registerGestureRecognizer];
     [self syncUI];
+    [self addConstraints];
 }
 
-- (void)setupFrameWithParrentView {
-    self.view.frame = self.parrentView.bounds;
-    [self.parrentView addSubview:self.view];
-    self.initialFrame = self.view.frame;
+- (void)addConstraints {
+    // bind the size of player's view to parrent view
+    self.cyberPlayer.view.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *viewsDictionary = @{
+                                      @"rootView":self.view,
+                                      @"playerView":self.cyberPlayer.view,
+                                      @"backgroundView":self.backgroundView
+                                      };
     
-    // bind playback's frame to the containers's boundary
-    NSDictionary *viewsDictionary = @{@"localRoot":self.view};
     NSMutableArray *constraintsArray = [[NSMutableArray alloc] init];
+
+//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+//                                           constraintsWithVisualFormat:@"H:[playerView(==rootView)]"
+//                                           options:0
+//                                           metrics:nil
+//                                           views:viewsDictionary]];
+//    
+//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+//                                           constraintsWithVisualFormat:@"V:[playerView(==rootView)]"
+//                                           options:0
+//                                           metrics:nil
+//                                           views:viewsDictionary]];
+//    
+//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+//                                           constraintsWithVisualFormat:@"H:[backgroundView(==rootView)]"
+//                                           options:0
+//                                           metrics:nil
+//                                           views:viewsDictionary]];
+//    
+//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+//                                           constraintsWithVisualFormat:@"V:[backgroundView(==rootView)]"
+//                                           options:0
+//                                           metrics:nil
+//                                           views:viewsDictionary]];
+    
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-                                           constraintsWithVisualFormat:@"H:|[localRoot]|"
-                                           options:0 metrics:nil
-                                           views:viewsDictionary]];
-    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-                                           constraintsWithVisualFormat:@"V:|[localRoot]|"
-                                           options:0 metrics:nil
+                                           constraintsWithVisualFormat:@"H:|[playerView]|"
+                                           options:0
+                                           metrics:nil
                                            views:viewsDictionary]];
     
-    [self.parrentView addConstraints:constraintsArray];
-    NSLog(@"DZVideoPlayerViewController viewDidLoad(), bind with container's view");
+    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+                                           constraintsWithVisualFormat:@"V:|[playerView]|"
+                                           options:0
+                                           metrics:nil
+                                           views:viewsDictionary]];
+    
+    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+                                           constraintsWithVisualFormat:@"H:|[backgroundView]|"
+                                           options:0
+                                           metrics:nil
+                                           views:viewsDictionary]];
+    
+    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
+                                           constraintsWithVisualFormat:@"V:|[backgroundView]|"
+                                           options:0
+                                           metrics:nil
+                                           views:viewsDictionary]];
+
+    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+
+    [self.view addConstraints:constraintsArray];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -267,13 +309,6 @@ static const NSString *PlayerStatusContext;
     }
 }
 
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [super prepareForSegue: segue sender: sender];
-}
-
 @end
 
 
@@ -285,14 +320,14 @@ static const NSString *PlayerStatusContext;
     // init CyberPlayer
     if (self.cyberPlayer == nil) {
         self.cyberPlayer = [[CyberPlayerController alloc] init];
-        [self.cyberPlayer setAccessKey:self.parrentView.ak];
+        [self.cyberPlayer setAccessKey:@""];
         [self setupNotifications];
     }
     
     // setup CyberPlayer's View
-    self.cyberPlayer.view.translatesAutoresizingMaskIntoConstraints = NO;
-
-    [self.cyberPlayer.view setFrame: self.view.bounds];
+//    [self.cyberPlayer.view setFrame: self.view.bounds];
+//    NSLog(@"setupCyberPlayer cyberPlayer's frame = %@", NSStringFromCGRect(self.view.bounds));
+    
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
     // register notification handler
@@ -342,6 +377,8 @@ static const NSString *PlayerStatusContext;
 }
 
 - (IBAction)play {
+    NSLog(@"play cyberPlayer's frame = %@", NSStringFromCGRect(self.cyberPlayer.view.frame));
+
     [self doPlay];
     [self startAutoHideTimerCountdown];
     [self onPlay];
@@ -393,7 +430,17 @@ static const NSString *PlayerStatusContext;
 }
 
 - (IBAction)toggleFullscreen:(id)sender {
+    // change to fullscreen
+    if (self.isFullscreen) {
+        NSLog(@"Change back to frame: %@", NSStringFromCGRect(self.initialFrame));
+        self.view.frame = self.initialFrame;
+    } else {
+        CGRect frame = [UIScreen mainScreen].bounds;
+        NSLog(@"Change to full screen frame: %@", NSStringFromCGRect(frame));
+        self.view.frame = frame;
+    }
     _isFullscreen = !_isFullscreen;
+    // change back
     [self onToggleFullscreen];
     [self syncUI];
     [self startAutoHideTimerCountdown];
@@ -544,8 +591,8 @@ static const NSString *PlayerStatusContext;
 
 // On play quality
 - (void) onCyberPlayerGotPlayQualityNotification: (NSNotification*)notification {
-    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %li",
-          notification, self.cyberPlayer.playbackState);
+//    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %li",
+//          notification, self.cyberPlayer.playbackState);
 }
 
 // On Network Bitrate

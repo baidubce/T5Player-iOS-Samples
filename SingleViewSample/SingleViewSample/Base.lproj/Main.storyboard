@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -19,37 +18,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ky-cd-1bc" customClass="DZVideoPlayerViewControllerContainerView">
-                                <rect key="frame" x="-9" y="30" width="337" height="190"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bb1-1Q-gNw">
+                                <rect key="frame" x="0.0" y="20" width="320" height="180"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="5Ky-cd-1bc" secondAttribute="height" multiplier="16:9" id="V1c-j8-m0q"/>
+                                    <constraint firstAttribute="width" secondItem="bb1-1Q-gNw" secondAttribute="height" multiplier="16:9" id="aND-IK-6XC"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="ak" value="@&quot;5976ebbb80ff49e7984bb3c1061a657d&quot;"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="style">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
+                                <connections>
+                                    <segue destination="tVP-K7-niw" kind="embed" identifier="cyberplayer" id="xnm-ya-YdS"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-25" id="gAM-Gv-33J"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="5Ky-cd-1bc" secondAttribute="trailing" constant="-24" id="nN4-3q-lu9"/>
-                            <constraint firstItem="5Ky-cd-1bc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="30" id="r6u-qr-YeS"/>
+                            <constraint firstItem="bb1-1Q-gNw" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="EvS-4Z-ibN"/>
+                            <constraint firstItem="bb1-1Q-gNw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="bti-3U-Qpj"/>
+                            <constraint firstItem="bb1-1Q-gNw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="cxR-QD-fH8"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="playbackContainerView" destination="5Ky-cd-1bc" id="Wwu-KE-IEx"/>
+                        <outlet property="playerContainerView" destination="bb1-1Q-gNw" id="2Eh-dZ-zIN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="600" y="467"/>
+        </scene>
+        <!--Video Player View Controller-->
+        <scene sceneID="yTG-wc-q9R">
+            <objects>
+                <viewController id="tVP-K7-niw" customClass="DZVideoPlayerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8bw-xf-ZDg"/>
+                        <viewControllerLayoutGuide type="bottom" id="PSx-Q4-Lfr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xQg-U2-dYg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ikX-bW-C8n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1068" y="467"/>
         </scene>
     </scenes>
 </document>

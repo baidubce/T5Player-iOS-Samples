@@ -10,7 +10,8 @@
 
 @interface ViewController ()
 
-@property (weak, nonatomic) IBOutlet DZVideoPlayerViewControllerContainerView *playbackContainerView;
+@property (weak, nonatomic) DZVideoPlayerViewController* playerViewController;
+@property (weak, nonatomic) IBOutlet UIView *playerContainerView;
 
 @end
 
@@ -20,27 +21,30 @@
     [super viewDidLoad];
     // after create container view, customize the internal playback view
     // get configuration from playbackContainerView. instantiate DZVideoPlayerViewController and add constraints.
-    // set video address and AK if need
     
-    DZVideoPlayerViewController *videoPlayerViewController = self.playbackContainerView.videoPlayerViewController;
-    videoPlayerViewController.delegate = self;
+    self.playerViewController.delegate = self;
+    NSLog(@"ViewController viewDidLoad cyberPlayer's frame = %@", NSStringFromCGRect(self.playerViewController.cyberPlayer.view.frame));
 
     NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
-//    NSString* videoAddress = @"http://hz01-plattech-rdqa00.hz01.baidu.com:8008/caselist/华尔街之狼.m4v";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
-
-    NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
-    videoPlayerViewController.videoURL = remoteVideo;
     
-//    NSString* ak = @"sssssssssssssssssssssssssss";
-//    [videoPlayerViewController.cyberPlayer setAccessKey:ak];
-//    [videoPlayerViewController prepareAndPlayAutomatically:YES];
+    NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
+    self.playerViewController.videoURL = remoteVideo;
 
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"cyberplayer"]) {
+
+        self.playerViewController = (DZVideoPlayerViewController*) segue.destinationViewController;
+        [self.playerViewController loadConfiguration];
+        
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -50,6 +54,7 @@
 - (void) dealloc {
     NSLog(@"ViewController dealloc(), \n %@", [NSThread callStackSymbols]);
 }
+
 @end
 
 
