@@ -24,7 +24,6 @@
                                                   CYBERPLAYER_ACCESS_KEY : @"9ea040b91e974376a28367f23721e6fb"
                                                };
     [[NSUserDefaults standardUserDefaults] setValuesForKeysWithDictionary:cyberplayerConfiguration];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     return YES;
 }
 

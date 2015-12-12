@@ -63,11 +63,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"DZVideoPlayerViewController viewDidLoad.");
-    NSLog(@"DZVideoPlayerViewController root frame is :%@", NSStringFromCGRect(self.view.frame));
-    NSLog(@"DZVideoPlayerViewController background frame is :%@", NSStringFromCGRect(self.backgroundView.frame));
-    self.initialFrame = self.view.frame;
-    
     // set default configuration properties before loading nib
     _isFullscreen = NO;
     _viewsToHideOnIdle = [[NSMutableArray alloc] init];
@@ -87,8 +82,8 @@
     [self setupCyberPlayer];
     [self setupRemoteCommandCenter];
     [self registerGestureRecognizer];
-    [self syncUI];
     [self addConstraints];
+    [self syncUI];
 }
 
 - (void)addConstraints {
@@ -96,7 +91,6 @@
     self.cyberPlayer.view.translatesAutoresizingMaskIntoConstraints = NO;
     
     NSDictionary *viewsDictionary = @{
-                                      @"rootView":self.view,
                                       @"playerView":self.cyberPlayer.view,
                                       @"backgroundView":self.backgroundView
                                       };
@@ -289,15 +283,14 @@
     // init CyberPlayer
     if (self.cyberPlayer == nil) {
         self.cyberPlayer = [[CyberPlayerController alloc] init];
-        [self.cyberPlayer setAccessKey:@""];
+        NSString* ak = [[NSUserDefaults standardUserDefaults] stringForKey:CYBERPLAYER_ACCESS_KEY];
+        [self.cyberPlayer setAccessKey: (ak == nil) ? @"" : ak];
         [self setupNotifications];
     }
     
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
-    // register notification handler
     [self setupPlaybackProgress];
-    
 }
 
 @end
@@ -719,22 +712,15 @@
 }
 
 - (void)setupPlaybackProgress {
-    // ensure this method is called in main thread
-    if ([[NSThread currentThread] isMainThread]) {
-        if ([self.progressTimer isValid]) {
-            [self.progressTimer invalidate];
-            self.progressTimer = nil;
-        }
-        self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                              target:self
-                                                            selector:@selector(updateProgressIndicator:)
-                                                            userInfo:nil
-                                                             repeats:YES];
-    } else {
-        [self performSelectorOnMainThread:@selector(setupPlaybackProgress)
-                               withObject:nil
-                            waitUntilDone:NO];
+    if ([self.progressTimer isValid]) {
+        [self.progressTimer invalidate];
+        self.progressTimer = nil;
     }
+    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                          target:self
+                                                        selector:@selector(updateProgressIndicator:)
+                                                        userInfo:nil
+                                                         repeats:YES];
     self.sliderProgress.value = 0;
 }
 
