@@ -7,12 +7,6 @@
 //
 
 #import "DZVideoPlayerViewController.h"
-#import "CyberPlayerController.h"
-#import "CyberplayerUtils.h"
-
-static const NSString *ItemStatusContext;
-static const NSString *PlayerRateContext;
-static const NSString *PlayerStatusContext;
 
 @interface DZVideoPlayerViewController ()
 {
@@ -26,7 +20,7 @@ static const NSString *PlayerStatusContext;
 @property (assign, nonatomic) BOOL isSeeking;
 @property (assign, nonatomic) BOOL isControlsHidden;
 
-@property (strong, nonatomic) NSTimer *autoHideTImer;
+@property (strong, nonatomic) NSTimer *autoHideTimer;
 @property (strong, nonatomic) NSTimer *progressTimer;
 
 // Player time observer target
@@ -56,10 +50,10 @@ static const NSString *PlayerStatusContext;
 
 #pragma mark - ViewController Lifecycle Override
 
-- (void) loadConfiguration {
+- (void) initWithUserDefaults {
     NSBundle *bundle = [DZVideoPlayerViewController bundle];
     NSString* nibfile = [[NSUserDefaults standardUserDefaults] stringForKey: CYBERPLAYER_NIB_FILE_NAME];
-    [self initWithNibName:nibfile bundle:bundle];
+    [super initWithNibName:nibfile bundle:bundle];
 }
 
 /*
@@ -88,7 +82,6 @@ static const NSString *PlayerStatusContext;
     if (self.bottomToolbarView) {
         [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
     }
-    self.sliderProgress.value = 0;
     
     [self setupActions];
     [self setupCyberPlayer];
@@ -110,30 +103,6 @@ static const NSString *PlayerStatusContext;
     
     NSMutableArray *constraintsArray = [[NSMutableArray alloc] init];
 
-//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-//                                           constraintsWithVisualFormat:@"H:[playerView(==rootView)]"
-//                                           options:0
-//                                           metrics:nil
-//                                           views:viewsDictionary]];
-//    
-//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-//                                           constraintsWithVisualFormat:@"V:[playerView(==rootView)]"
-//                                           options:0
-//                                           metrics:nil
-//                                           views:viewsDictionary]];
-//    
-//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-//                                           constraintsWithVisualFormat:@"H:[backgroundView(==rootView)]"
-//                                           options:0
-//                                           metrics:nil
-//                                           views:viewsDictionary]];
-//    
-//    [constraintsArray addObjectsFromArray:[NSLayoutConstraint
-//                                           constraintsWithVisualFormat:@"V:[backgroundView(==rootView)]"
-//                                           options:0
-//                                           metrics:nil
-//                                           views:viewsDictionary]];
-    
     [constraintsArray addObjectsFromArray:[NSLayoutConstraint
                                            constraintsWithVisualFormat:@"H:|[playerView]|"
                                            options:0
@@ -323,10 +292,6 @@ static const NSString *PlayerStatusContext;
         [self.cyberPlayer setAccessKey:@""];
         [self setupNotifications];
     }
-    
-    // setup CyberPlayer's View
-//    [self.cyberPlayer.view setFrame: self.view.bounds];
-//    NSLog(@"setupCyberPlayer cyberPlayer's frame = %@", NSStringFromCGRect(self.view.bounds));
     
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
@@ -770,7 +735,7 @@ static const NSString *PlayerStatusContext;
                                withObject:nil
                             waitUntilDone:NO];
     }
-    
+    self.sliderProgress.value = 0;
 }
 
 - (void)resignPlaybackProgress {
@@ -808,11 +773,11 @@ static const NSString *PlayerStatusContext;
 @implementation DZVideoPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startAutoHideTimerCountdown {
-    if (self.autoHideTImer.isValid) {
-        [self.autoHideTImer invalidate];
+    if (self.autoHideTimer.isValid) {
+        [self.autoHideTimer invalidate];
     }
     if (self.isHideControlsOnIdleEnabled) {
-        self.autoHideTImer = [NSTimer scheduledTimerWithTimeInterval:self.delayBeforeHidingViewsOnIdle
+        self.autoHideTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayBeforeHidingViewsOnIdle
                                                           target:self
                                                         selector:@selector(hideControls)
                                                         userInfo:nil
@@ -821,9 +786,9 @@ static const NSString *PlayerStatusContext;
 }
 
 - (void)stopAutoHideTimerCountdown {
-    if (self.autoHideTImer) {
-        [self.autoHideTImer invalidate];
-        self.autoHideTImer = nil;
+    if (self.autoHideTimer) {
+        [self.autoHideTimer invalidate];
+        self.autoHideTimer = nil;
     }
 }
 

@@ -20,10 +20,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // after create container view, customize the internal playback view
-    // get configuration from playbackContainerView. instantiate DZVideoPlayerViewController and add constraints.
     
     self.playerViewController.delegate = self;
-    NSLog(@"ViewController viewDidLoad cyberPlayer's frame = %@", NSStringFromCGRect(self.playerViewController.cyberPlayer.view.frame));
 
     NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
@@ -33,26 +31,11 @@
 
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"cyberplayer"]) {
-
         self.playerViewController = (DZVideoPlayerViewController*) segue.destinationViewController;
-        [self.playerViewController loadConfiguration];
-        
+        [self.playerViewController initWithUserDefaults];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"ViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
-}
-
-- (void) dealloc {
-    NSLog(@"ViewController dealloc(), \n %@", [NSThread callStackSymbols]);
 }
 
 @end

@@ -53,7 +53,7 @@
 
 @property (strong, nonatomic) NSURL *videoURL;
 
-- (void) loadConfiguration;
+- (void) initWithUserDefaults;
 
 @end
 
