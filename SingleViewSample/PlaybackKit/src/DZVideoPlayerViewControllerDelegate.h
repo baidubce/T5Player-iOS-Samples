@@ -29,7 +29,7 @@
  Check isFullscreen property and animate view controller's view appropriately.
  If you don't want to support fullscreen please provide custom user interface which does not have fullscreenExpandButton and fullscreenShrinkButton, or hide the buttons in default user interface.
  */
-- (void)playerDidToggleFullscreen;
+- (void)playerToggleFullscreen;
 
 /*
  Provide now playing info like this:

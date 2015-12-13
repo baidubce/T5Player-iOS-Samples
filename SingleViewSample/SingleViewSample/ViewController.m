@@ -12,6 +12,10 @@
 
 @property (weak, nonatomic) DZVideoPlayerViewController* playerViewController;
 @property (weak, nonatomic) IBOutlet UIView *playerContainerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *playerContainerViewTopConstraint;
+
+@property (assign, nonatomic) CGRect initPlaybackFrame;
+@property (assign, nonatomic) BOOL isFullscreen;
 
 @end
 
@@ -20,14 +24,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // after create container view, customize the internal playback view
-    
+    self.isFullscreen = false;
     self.playerViewController.delegate = self;
 
     NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
     
     NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
-    self.playerViewController.videoURL = remoteVideo;
+    self.playerViewController.videoURL = localVideo;
 
 }
 
@@ -38,10 +42,87 @@
     }
 }
 
+-(BOOL) shouldAutorotate {
+    return YES;
+}
+
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    NSLog(@"View Controller: %@", self);
+    
+    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+        NSLog(@"ViewController: Landscape left");
+    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        NSLog(@"ViewController: Landscape right");
+    } else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) {
+        NSLog(@"ViewController: Portrait");
+    } else if (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+        NSLog(@"ViewController: Upside down");
+    }
+    NSLog(@"ViewController frame = %@", NSStringFromCGRect(self.view.frame));
+}
+
 @end
 
 
 @implementation ViewController (PlaybackDelegate)
+
+/*
+ Check isFullscreen property and animate view controller's view appropriately.
+ If you don't want to support fullscreen please provide custom user interface which does not have fullscreenExpandButton and fullscreenShrinkButton, or hide the buttons in default user interface.
+ */
+- (void)playerToggleFullscreen {
+    NSLog(@"playerToggleFullscreen");
+    NSLog(@"before rotation sreen's frame: %@", NSStringFromCGRect(self.playerContainerView.frame));
+    
+    if (!self.isFullscreen) {
+        self.playerContainerViewTopConstraint.constant = 0.0;
+        
+        self.initPlaybackFrame = self.playerContainerView.frame;
+        [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight];
+        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+        
+        // change root view oriention and bounds
+        CGRect rect = CGRectMake(0, 0, SCREEN_HEIGHT, SCREEN_WIDTH);
+        self.view.bounds = rect;
+        self.view.transform = CGAffineTransformMakeRotation(M_PI_2);;
+        NSLog(@"middle container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
+        self.playerContainerView.frame = self.view.bounds;
+        NSLog(@"middle container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
+        
+    } else {
+        self.playerContainerViewTopConstraint.constant = 20.0;
+        
+        self.playerContainerView.frame = self.initPlaybackFrame;
+        self.view.transform = CGAffineTransformIdentity;
+        CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        self.view.bounds = rect;
+        [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationPortrait];
+    }
+    
+    self.isFullscreen = !self.isFullscreen;
+    [self setNeedsStatusBarAppearanceUpdate];
+    NSLog(@"after container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
+
+}
+
+-(BOOL) prefersStatusBarHidden {
+    return self.isFullscreen;
+}
+
+/*
+ Provide now playing info like this:
+ [nowPlayingInfo setObject:track.artistName forKey:MPMediaItemPropertyArtist];
+ [nowPlayingInfo setObject:track.trackTitle forKey:MPMediaItemPropertyTitle];
+ */
+- (void)playerGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo {
+    NSLog(@"playerGatherNowPlayingInfo : %@", nowPlayingInfo);
+}
+
 
 - (void)playerFailedToLoadAssetWithError:(NSError *)error {
     NSLog(@"playerFailedToLoadAssetWithError : %@", error);
@@ -73,24 +154,6 @@
 - (void)playerRequirePreviousTrack {
     NSLog(@"playerRequirePreviousTrack");
 }
-
-/*
- Check isFullscreen property and animate view controller's view appropriately.
- If you don't want to support fullscreen please provide custom user interface which does not have fullscreenExpandButton and fullscreenShrinkButton, or hide the buttons in default user interface.
- */
-- (void)playerDidToggleFullscreen {
-    NSLog(@"playerDidToggleFullscreen");
-}
-
-/*
- Provide now playing info like this:
- [nowPlayingInfo setObject:track.artistName forKey:MPMediaItemPropertyArtist];
- [nowPlayingInfo setObject:track.trackTitle forKey:MPMediaItemPropertyTitle];
- */
-- (void)playerGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo {
-    NSLog(@"playerGatherNowPlayingInfo : %@", nowPlayingInfo);
-}
-
 @end
 
 

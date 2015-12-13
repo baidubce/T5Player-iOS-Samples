@@ -32,7 +32,7 @@
                         <constraints>
                             <constraint firstItem="bb1-1Q-gNw" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="EvS-4Z-ibN"/>
                             <constraint firstItem="bb1-1Q-gNw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="bti-3U-Qpj"/>
-                            <constraint firstItem="bb1-1Q-gNw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="cxR-QD-fH8"/>
+                            <constraint firstItem="bb1-1Q-gNw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" priority="500" constant="20" id="cxR-QD-fH8"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -40,6 +40,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="playerContainerView" destination="bb1-1Q-gNw" id="2Eh-dZ-zIN"/>
+                        <outlet property="playerContainerViewTopConstraint" destination="cxR-QD-fH8" id="zaA-TQ-883"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

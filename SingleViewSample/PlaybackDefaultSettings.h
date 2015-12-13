@@ -22,5 +22,15 @@
 
 #define CYBERPLAYER_NIB_FILE_NAME @"cyberplayer.nibfilename"
 
+#pragma mark - UI Macro
+
+#define SCREEN_HEIGHT                    MAX([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_WIDTH                     MIN([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
+#define Screen35in                      (SCREEN_HEIGHT==480)
+#define Screen40in                      (SCREEN_HEIGHT==568)
+#define Screen47in                      (SCREEN_HEIGHT==667)
+#define Screen55in                      (SCREEN_HEIGHT==736)
+#define iPad                            (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define iPadPro                         ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && (ScreenHeight==1366))
 
 

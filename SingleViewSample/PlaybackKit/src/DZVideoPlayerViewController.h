@@ -118,8 +118,7 @@
 @property (readonly, nonatomic) NSTimeInterval currentPlaybackTime;
 @property (readonly, nonatomic) NSTimeInterval availableDuration;
 @property (readonly, nonatomic) BOOL isPlaying;
-@property (readonly, nonatomic) BOOL isFullscreen;
-
+@property (readonly) BOOL isLandscape;
 @end
 
 

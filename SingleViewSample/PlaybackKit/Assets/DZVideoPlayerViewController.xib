@@ -107,9 +107,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H3b-4U-nud">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="BEC-Jz-pJQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </view>
                                         <constraints>
@@ -121,7 +121,7 @@
                                     </visualEffectView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="H3b-4U-nud" secondAttribute="bottom" constant="-84" id="2Ri-fZ-y20"/>
+                                    <constraint firstAttribute="bottom" secondItem="H3b-4U-nud" secondAttribute="bottom" id="2Ri-fZ-y20"/>
                                     <constraint firstItem="H3b-4U-nud" firstAttribute="top" secondItem="ZqR-5p-thz" secondAttribute="top" id="BdC-ng-LWZ"/>
                                     <constraint firstItem="H3b-4U-nud" firstAttribute="leading" secondItem="ZqR-5p-thz" secondAttribute="leading" id="c7o-dr-M60"/>
                                 </constraints>

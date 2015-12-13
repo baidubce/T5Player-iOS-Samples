@@ -10,7 +10,6 @@
 
 @interface DZVideoPlayerViewController ()
 {
-    BOOL _isFullscreen;
 }
 
 #pragma mark - Player Engine properties
@@ -64,7 +63,6 @@
     [super viewDidLoad];
     
     // set default configuration properties before loading nib
-    _isFullscreen = NO;
     _viewsToHideOnIdle = [[NSMutableArray alloc] init];
     _delayBeforeHidingViewsOnIdle = 3.0;
     _isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
@@ -201,7 +199,7 @@
         }
         
         if (self.isShowFullscreenExpandAndShrinkButtonsEnabled) {
-            if (self.isFullscreen) {
+            if (self.isLandscape) {
                 self.fullscreenExpandButton.hidden = YES;
                 self.fullscreenExpandButton.enabled = NO;
                 
@@ -270,6 +268,17 @@
         [self.cyberPlayer stop];
         [self syncUI];
     }
+}
+
+#pragma mark - View Rotation
+
+- (BOOL) shouldAutorotate {
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    NSLog(@"DZVideoPlayerViewController supportedInterfaceOrientations");
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
@@ -389,15 +398,15 @@
 
 - (IBAction)toggleFullscreen:(id)sender {
     // change to fullscreen
-    if (self.isFullscreen) {
-        NSLog(@"Change back to frame: %@", NSStringFromCGRect(self.initialFrame));
-        self.view.frame = self.initialFrame;
-    } else {
-        CGRect frame = [UIScreen mainScreen].bounds;
-        NSLog(@"Change to full screen frame: %@", NSStringFromCGRect(frame));
-        self.view.frame = frame;
-    }
-    _isFullscreen = !_isFullscreen;
+//    if (self.isFullscreen) {
+//        NSLog(@"Change back to frame: %@", NSStringFromCGRect(self.initialFrame));
+//        self.view.frame = self.initialFrame;
+//    } else {
+//        CGRect frame = [UIScreen mainScreen].bounds;
+//        NSLog(@"Change to full screen frame: %@", NSStringFromCGRect(frame));
+//        self.view.frame = frame;
+//    }
+//    _isFullscreen = !_isFullscreen;
     // change back
     [self onToggleFullscreen];
     [self syncUI];
@@ -447,8 +456,9 @@
     return self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying;
 }
 
-- (BOOL)isFullscreen {
-    return _isFullscreen;
+- (BOOL)isLandscape {
+   return UIInterfaceOrientationIsLandscape(
+                    [[UIApplication sharedApplication] statusBarOrientation]);
 }
 
 @end
@@ -676,8 +686,8 @@
 }
 
 - (void)onToggleFullscreen {
-    if ([self.delegate respondsToSelector:@selector(playerDidToggleFullscreen)]) {
-        [self.delegate playerDidToggleFullscreen];
+    if ([self.delegate respondsToSelector:@selector(playerToggleFullscreen)]) {
+        [self.delegate playerToggleFullscreen];
     }
 }
 
