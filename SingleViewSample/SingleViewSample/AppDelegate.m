@@ -20,7 +20,7 @@
     // Override point for customization after application launch.
     NSLog(@"Screen size: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
     NSDictionary* cyberplayerConfiguration = @{
-                                               CYBERPLAYER_NIB_FILE_NAME : @"DZVideoPlayerViewController",
+                                               CYBERPLAYER_NIB_FILE_NAME : @"CyberPlayerInterface",
                                                   CYBERPLAYER_ACCESS_KEY : @"9ea040b91e974376a28367f23721e6fb"
                                                };
     [[NSUserDefaults standardUserDefaults] setValuesForKeysWithDictionary:cyberplayerConfiguration];

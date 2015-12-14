@@ -1,10 +1,8 @@
 //
 //  CyberPlayerViewController.h
-//  OhMyTube
 //
-//  Created by Denis Zamataev on 29/05/15.
-//  Copyright (c) 2015 Mysterious Organization. All rights reserved.
-//
+//  Created by hudapeng on 12/7/15.
+//  Copyright © 2015 Baidu. All rights reserved.
 
 @import UIKit;
 @import AVFoundation;
