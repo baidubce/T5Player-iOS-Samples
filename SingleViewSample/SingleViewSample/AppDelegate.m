@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "PlaybackDefaultSettings.h"
+#import "CyberPlayerSettings.h"
 
 @interface AppDelegate ()
 

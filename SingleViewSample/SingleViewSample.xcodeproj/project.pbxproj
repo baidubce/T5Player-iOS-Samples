@@ -63,7 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		024041041C158C9100970019 /* PlaybackDefaultSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaybackDefaultSettings.h; sourceTree = "<group>"; };
+		024041041C158C9100970019 /* CyberPlayerSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CyberPlayerSettings.h; sourceTree = "<group>"; };
 		024041071C15BBB000970019 /* TimeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeFormatter.h; path = PlaybackKit/src/TimeFormatter.h; sourceTree = "<group>"; };
 		024041081C15BBB000970019 /* TimeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeFormatter.m; path = PlaybackKit/src/TimeFormatter.m; sourceTree = "<group>"; };
 		02583A6E1C0BF6C700649671 /* SingleViewSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SingleViewSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,7 +97,7 @@
 		02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController_simple.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController_simple.xib; sourceTree = "<group>"; };
 		02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController.xib; sourceTree = "<group>"; };
 		02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewController.h; path = PlaybackKit/src/DZVideoPlayerViewController.h; sourceTree = "<group>"; };
-		02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZVideoPlayerViewControllerDelegate.h; path = PlaybackKit/src/DZVideoPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
+		02583ACA1C0BFDC900649671 /* CyberPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerViewControllerDelegate.h; path = PlaybackKit/src/CyberPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
 		02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZVideoPlayerViewController.m; path = PlaybackKit/src/DZVideoPlayerViewController.m; sourceTree = "<group>"; };
 		02583AD81C0C04D200649671 /* Star_Wars.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Star_Wars.mp4; sourceTree = "<group>"; };
 		02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerController.h; path = CyberPlayer/CyberPlayerController.h; sourceTree = "<group>"; };
@@ -254,8 +254,8 @@
 				02F342861C1C3476006614BF /* DZPlayerButton.m */,
 				02583AC71C0BFDC900649671 /* DZVideoPlayerViewController.h */,
 				02583ACE1C0BFDC900649671 /* DZVideoPlayerViewController.m */,
-				02583ACA1C0BFDC900649671 /* DZVideoPlayerViewControllerDelegate.h */,
-				024041041C158C9100970019 /* PlaybackDefaultSettings.h */,
+				02583ACA1C0BFDC900649671 /* CyberPlayerViewControllerDelegate.h */,
+				024041041C158C9100970019 /* CyberPlayerSettings.h */,
 				024041071C15BBB000970019 /* TimeFormatter.h */,
 				024041081C15BBB000970019 /* TimeFormatter.m */,
 			);

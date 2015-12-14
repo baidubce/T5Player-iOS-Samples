@@ -13,9 +13,9 @@
 #import "CyberPlayerController.h"
 #import "CyberplayerUtils.h"
 
-#import "DZVideoPlayerViewControllerDelegate.h"
+#import "CyberPlayerViewControllerDelegate.h"
 #import "TimeFormatter.h"
-#import "PlaybackDefaultSettings.h"
+#import "CyberPlayerSettings.h"
 
 @interface DZVideoPlayerViewController : UIViewController
 
@@ -36,7 +36,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenExpandButton;
 @property (weak, nonatomic) IBOutlet UIButton *fullscreenShrinkButton;
 
-@property (weak, nonatomic) id<DZVideoPlayerViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<CyberPlayerViewControllerDelegate> delegate;
 
 @property (strong, nonatomic) CyberPlayerController* cyberPlayer;
 

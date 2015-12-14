@@ -1,5 +1,5 @@
 //
-//  DZVideoPlayerViewControllerDelegate.h
+//  CyberPlayerViewControllerDelegate.h
 //  OhMyTube
 //
 //  Created by Denis Zamataev on 29/05/15.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol DZVideoPlayerViewControllerDelegate <NSObject>
+@protocol CyberPlayerViewControllerDelegate <NSObject>
 
 @optional
 
