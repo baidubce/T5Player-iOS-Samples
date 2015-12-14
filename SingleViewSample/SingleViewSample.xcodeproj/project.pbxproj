@@ -28,8 +28,8 @@
 		02583ABE1C0BFDBB00649671 /* videoplayer_shrink@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */; };
 		02583ABF1C0BFDBB00649671 /* videoplayer_shrink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */; };
 		02583AC01C0BFDBB00649671 /* videoplayer_shrink@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */; };
-		02583AC11C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */; };
-		02583AC21C0BFDBB00649671 /* DZVideoPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */; };
+		02583AC11C0BFDBB00649671 /* CyberPlayerInterface_simple.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB31C0BFDBB00649671 /* CyberPlayerInterface_simple.xib */; };
+		02583AC21C0BFDBB00649671 /* CyberPlayerInterface.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02583AB41C0BFDBB00649671 /* CyberPlayerInterface.xib */; };
 		02583AD41C0BFDC900649671 /* CyberPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02583ACE1C0BFDC900649671 /* CyberPlayerViewController.m */; };
 		02583AD91C0C04D200649671 /* Star_Wars.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 02583AD81C0C04D200649671 /* Star_Wars.mp4 */; };
 		02583AE51C0C8C0100649671 /* libASIHTTP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583ADE1C0C8C0100649671 /* libASIHTTP.a */; };
@@ -94,8 +94,8 @@
 		02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@1x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@1x.png"; sourceTree = "<group>"; };
 		02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@2x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@2x.png"; sourceTree = "<group>"; };
 		02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "videoplayer_shrink@3x.png"; path = "PlaybackKit/Assets/videoplayer_shrink@3x.png"; sourceTree = "<group>"; };
-		02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController_simple.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController_simple.xib; sourceTree = "<group>"; };
-		02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZVideoPlayerViewController.xib; path = PlaybackKit/Assets/DZVideoPlayerViewController.xib; sourceTree = "<group>"; };
+		02583AB31C0BFDBB00649671 /* CyberPlayerInterface_simple.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CyberPlayerInterface_simple.xib; path = PlaybackKit/Assets/CyberPlayerInterface_simple.xib; sourceTree = "<group>"; };
+		02583AB41C0BFDBB00649671 /* CyberPlayerInterface.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CyberPlayerInterface.xib; path = PlaybackKit/Assets/CyberPlayerInterface.xib; sourceTree = "<group>"; };
 		02583AC71C0BFDC900649671 /* CyberPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerViewController.h; path = PlaybackKit/src/CyberPlayerViewController.h; sourceTree = "<group>"; };
 		02583ACA1C0BFDC900649671 /* CyberPlayerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerViewControllerDelegate.h; path = PlaybackKit/src/CyberPlayerViewControllerDelegate.h; sourceTree = "<group>"; };
 		02583ACE1C0BFDC900649671 /* CyberPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CyberPlayerViewController.m; path = PlaybackKit/src/CyberPlayerViewController.m; sourceTree = "<group>"; };
@@ -241,8 +241,8 @@
 				02583AB01C0BFDBB00649671 /* videoplayer_shrink@1x.png */,
 				02583AB11C0BFDBB00649671 /* videoplayer_shrink@2x.png */,
 				02583AB21C0BFDBB00649671 /* videoplayer_shrink@3x.png */,
-				02583AB31C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib */,
-				02583AB41C0BFDBB00649671 /* DZVideoPlayerViewController.xib */,
+				02583AB31C0BFDBB00649671 /* CyberPlayerInterface_simple.xib */,
+				02583AB41C0BFDBB00649671 /* CyberPlayerInterface.xib */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -399,9 +399,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02583AC21C0BFDBB00649671 /* DZVideoPlayerViewController.xib in Resources */,
+				02583AC21C0BFDBB00649671 /* CyberPlayerInterface.xib in Resources */,
 				02583ABC1C0BFDBB00649671 /* videoplayer_play@2x.png in Resources */,
-				02583AC11C0BFDBB00649671 /* DZVideoPlayerViewController_simple.xib in Resources */,
+				02583AC11C0BFDBB00649671 /* CyberPlayerInterface_simple.xib in Resources */,
 				02583ABB1C0BFDBB00649671 /* videoplayer_play@1x.png in Resources */,
 				02583AB51C0BFDBB00649671 /* videoplayer_expand@1x.png in Resources */,
 				02583AB61C0BFDBB00649671 /* videoplayer_expand@2x.png in Resources */,
