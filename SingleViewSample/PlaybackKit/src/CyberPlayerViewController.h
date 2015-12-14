@@ -1,5 +1,5 @@
 //
-//  DZVideoPlayerViewController.h
+//  CyberPlayerViewController.h
 //  OhMyTube
 //
 //  Created by Denis Zamataev on 29/05/15.
@@ -17,7 +17,7 @@
 #import "TimeFormatter.h"
 #import "CyberPlayerSettings.h"
 
-@interface DZVideoPlayerViewController : UIViewController
+@interface CyberPlayerViewController : UIViewController
 
 // Interface Builder Outlets
 @property (weak, nonatomic) IBOutlet UIView *backgroundView;
@@ -58,7 +58,7 @@
 
 
 #pragma mark - playback commands methods
-@interface DZVideoPlayerViewController (PlaybackAPI)
+@interface CyberPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
 - (void)stop;
@@ -67,7 +67,7 @@
 
 
 #pragma mark - Action methods for control kits
-@interface DZVideoPlayerViewController (PlaybackKitActions)
+@interface CyberPlayerViewController (PlaybackKitActions)
 
 - (void)setupActions;
 - (IBAction)play;
@@ -84,7 +84,7 @@
 
 
 #pragma mark - methods about playback engine
-@interface DZVideoPlayerViewController (VideoEngine)
+@interface CyberPlayerViewController (VideoEngine)
 
 - (void)setupCyberPlayer;
 
@@ -92,7 +92,7 @@
 
 
 #pragma mark - methods for lock screen
-@interface DZVideoPlayerViewController (LockScreenControl)
+@interface CyberPlayerViewController (LockScreenControl)
 
 - (void)setupRemoteControlEvents;
 - (void)setupRemoteCommandCenter;
@@ -106,14 +106,14 @@
 
 
 #pragma mark - methods for configuration
-@interface DZVideoPlayerViewController (KitConfiguration)
+@interface CyberPlayerViewController (KitConfiguration)
 
 + (NSBundle*)bundle;
 
 @end
 
 #pragma mark - readonly properties
-@interface DZVideoPlayerViewController (PlaybackStatus)
+@interface CyberPlayerViewController (PlaybackStatus)
 
 @property (readonly, nonatomic) NSTimeInterval currentPlaybackTime;
 @property (readonly, nonatomic) NSTimeInterval availableDuration;
@@ -123,7 +123,7 @@
 
 
 #pragma mark - methods about playback progress
-@interface DZVideoPlayerViewController (PlaybackProgroess)
+@interface CyberPlayerViewController (PlaybackProgroess)
 
 - (void)setupPlaybackProgress;
 - (void)resignPlaybackProgress;
@@ -133,7 +133,7 @@
 
 
 #pragma mark - methods about gestures
-@interface DZVideoPlayerViewController (Gesture)
+@interface CyberPlayerViewController (Gesture)
 
 -(void) registerGestureRecognizer;
 -(void) singleTapOnPlaybackView;
@@ -142,7 +142,7 @@
 @end
 
 #pragma mark - methods about playback control auto hide
-@interface DZVideoPlayerViewController (PlaybackKitAutoHide)
+@interface CyberPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startAutoHideTimerCountdown;
 - (void)stopAutoHideTimerCountdown;
@@ -153,7 +153,7 @@
 
 
 #pragma mark - methods about notification handler
-@interface DZVideoPlayerViewController (NotificationHandle)
+@interface CyberPlayerViewController (NotificationHandle)
 
 - (void)setupNotifications;
 - (void)resignNotifications;
@@ -162,7 +162,7 @@
 
 
 #pragma mark - methods about dispatch delegation
-@interface DZVideoPlayerViewController (DelegateInvocation)
+@interface CyberPlayerViewController (DelegateInvocation)
 
 - (void)onFailedToLoadAssetWithError:(NSError*)error;
 - (void)onPlay;

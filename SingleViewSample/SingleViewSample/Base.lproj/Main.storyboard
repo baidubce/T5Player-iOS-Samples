@@ -47,10 +47,10 @@
             </objects>
             <point key="canvasLocation" x="600" y="467"/>
         </scene>
-        <!--Video Player View Controller-->
+        <!--Cyber Player View Controller-->
         <scene sceneID="yTG-wc-q9R">
             <objects>
-                <viewController id="tVP-K7-niw" customClass="DZVideoPlayerViewController" sceneMemberID="viewController">
+                <viewController id="tVP-K7-niw" customClass="CyberPlayerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8bw-xf-ZDg"/>
                         <viewControllerLayoutGuide type="bottom" id="PSx-Q4-Lfr"/>

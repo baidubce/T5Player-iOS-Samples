@@ -1,14 +1,10 @@
 //
-//  DZVideoPlayerViewController.m
-//  OhMyTube
-//
-//  Created by Denis Zamataev on 29/05/15.
-//  Copyright (c) 2015 Mysterious Organization. All rights reserved.
+//  CyberPlayerViewController.m
 //
 
-#import "DZVideoPlayerViewController.h"
+#import "CyberPlayerViewController.h"
 
-@interface DZVideoPlayerViewController ()
+@interface CyberPlayerViewController ()
 {
 }
 
@@ -45,12 +41,12 @@
 
 @end
 
-@implementation DZVideoPlayerViewController
+@implementation CyberPlayerViewController
 
 #pragma mark - ViewController Lifecycle Override
 
 - (void) initWithUserDefaults {
-    NSBundle *bundle = [DZVideoPlayerViewController bundle];
+    NSBundle *bundle = [CyberPlayerViewController bundle];
     NSString* nibfile = [[NSUserDefaults standardUserDefaults] stringForKey: CYBERPLAYER_NIB_FILE_NAME];
     [super initWithNibName:nibfile bundle:bundle];
 }
@@ -134,7 +130,7 @@
     // stop playback, save current time,
     // unregister notification, KVO,
     //
-    NSLog(@"DZVideoPlayerViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
+    NSLog(@"CyberPlayerViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
     [self resignNotifications];
     [self stop];
     [self resignPlaybackProgress];
@@ -144,7 +140,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"DZVideoPlayerViewController dealloc(), \n %@", [NSThread callStackSymbols]);
+    NSLog(@"CyberPlayerViewController dealloc(), \n %@", [NSThread callStackSymbols]);
     [self resignNotifications];
     [self resignRemoteCommandCenter];
     [self resignPlaybackProgress];
@@ -162,7 +158,7 @@
 - (void) syncUI {
     // ensure this method is called in main thread.
     if (![[NSThread currentThread] isMainThread]) {
-        DZVideoPlayerViewController* __weak welf = self;
+        CyberPlayerViewController* __weak welf = self;
         dispatch_sync(dispatch_get_main_queue(), ^{
             [welf syncUI];
         });
@@ -277,14 +273,14 @@
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    NSLog(@"DZVideoPlayerViewController supportedInterfaceOrientations");
+    NSLog(@"CyberPlayerViewController supportedInterfaceOrientations");
     return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
 
 
-@implementation DZVideoPlayerViewController (VideoEngine)
+@implementation CyberPlayerViewController (VideoEngine)
 
 // create and setup CyberPlayer
 - (void)setupCyberPlayer {
@@ -305,7 +301,7 @@
 @end
 
 
-@implementation DZVideoPlayerViewController (PlaybackKitActions)
+@implementation CyberPlayerViewController (PlaybackKitActions)
 
 - (void)setupActions {
 
@@ -416,11 +412,11 @@
 @end
 
 
-@implementation DZVideoPlayerViewController (KitConfiguration)
+@implementation CyberPlayerViewController (KitConfiguration)
 
 + (NSBundle *)bundle {
     NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle]
-                                                 pathForResource:@"DZVideoPlayerViewController"
+                                                 pathForResource:@"CyberPlayerViewController"
                                                  ofType:@"bundle"]];
     return bundle;
 }
@@ -428,7 +424,7 @@
 @end
 
 
-@implementation DZVideoPlayerViewController (PlaybackStatus)
+@implementation CyberPlayerViewController (PlaybackStatus)
 
 - (NSTimeInterval)availableDuration {
     NSTimeInterval result = -1;
@@ -465,7 +461,7 @@
 
 
 
-@implementation DZVideoPlayerViewController (NotificationHandle)
+@implementation CyberPlayerViewController (NotificationHandle)
 
 - (void)setupNotifications {
     
@@ -635,7 +631,7 @@
 
 
 
-@implementation DZVideoPlayerViewController (DelegateInvocation)
+@implementation CyberPlayerViewController (DelegateInvocation)
 
 - (void)onFailedToLoadAssetWithError:(NSError*)error {
     if ([self.delegate respondsToSelector:@selector(playerFailedToLoadAssetWithError:)]) {
@@ -707,7 +703,7 @@
 
 
 
-@implementation DZVideoPlayerViewController (PlaybackProgroess)
+@implementation CyberPlayerViewController (PlaybackProgroess)
 
 - (void)updateProgressIndicator:(NSTimer*)timer {
     if (self.isSeeking) {
@@ -743,7 +739,7 @@
 
 @end
 
-@implementation DZVideoPlayerViewController (Gesture)
+@implementation CyberPlayerViewController (Gesture)
 
 -(void) registerGestureRecognizer {
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc]
@@ -766,7 +762,7 @@
 
 
 
-@implementation DZVideoPlayerViewController (PlaybackKitAutoHide)
+@implementation CyberPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startAutoHideTimerCountdown {
     if (self.autoHideTimer.isValid) {
@@ -810,7 +806,7 @@
 @end
 
 
-@implementation DZVideoPlayerViewController (PlaybackAPI)
+@implementation CyberPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
     [self play];
@@ -828,7 +824,7 @@
 
 #pragma mark - Remote Control Events
 
-@implementation DZVideoPlayerViewController (LockScreenControl)
+@implementation CyberPlayerViewController (LockScreenControl)
 
 - (void)setupRemoteControlEvents {
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -836,7 +832,7 @@
 }
 
 - (void)setupRemoteCommandCenter {
-    DZVideoPlayerViewController __weak *welf = self;
+    CyberPlayerViewController __weak *welf = self;
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     self.playCommandTarget = [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         [welf play];

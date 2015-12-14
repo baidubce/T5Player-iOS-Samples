@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DZVideoPlayerViewController.h"
+#import "CyberPlayerViewController.h"
 
 @interface ViewController : UIViewController {
 }

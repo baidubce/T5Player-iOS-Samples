@@ -10,7 +10,7 @@
 
 @interface ViewController ()
 
-@property (weak, nonatomic) DZVideoPlayerViewController* playerViewController;
+@property (weak, nonatomic) CyberPlayerViewController* playerViewController;
 @property (weak, nonatomic) IBOutlet UIView *playerContainerView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *playerContainerViewTopConstraint;
 
@@ -37,7 +37,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"cyberplayer"]) {
-        self.playerViewController = (DZVideoPlayerViewController*) segue.destinationViewController;
+        self.playerViewController = (CyberPlayerViewController*) segue.destinationViewController;
         [self.playerViewController initWithUserDefaults];
     }
 }
