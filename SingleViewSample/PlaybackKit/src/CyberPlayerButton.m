@@ -1,14 +1,13 @@
 //
-//  DZPlayerButton.m
+//  CyberPlayerButton.m
 //  Pods
 //
-//  Created by Denis Zamataev on 03/06/15.
 //
 //
 
-#import "DZPlayerButton.h"
+#import "CyberPlayerButton.h"
 
-@implementation DZPlayerButton
+@implementation CyberPlayerButton
 - (instancetype)init {
     self = [super init];
     if (self) {
