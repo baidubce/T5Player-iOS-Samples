@@ -62,18 +62,29 @@
     
     // set default configuration properties before loading nib
     _viewsToHideOnIdle = [[NSMutableArray alloc] init];
-    _delayBeforeHidingViewsOnIdle = 3.0;
-    _isShowFullscreenExpandAndShrinkButtonsEnabled = YES;
-    _isHideControlsOnIdleEnabled = YES;
-    _isBackgroundPlaybackEnabled = NO;
+
+    self.isShowControlsOnIdle = [[NSUserDefaults standardUserDefaults]
+                                 boolForKey:CYBERPLAYER_SHOW_CONTROLS_ON_IDLE];
+    
+    self.delayBeforeHidingViewsOnIdle =  [[NSUserDefaults standardUserDefaults]
+                                          doubleForKey: CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW];
+    if (self.delayBeforeHidingViewsOnIdle < 0.1) {
+        self.delayBeforeHidingViewsOnIdle = CYBERPLAYER_DEFAULT_DELAY_BEFORE_HIDING_VIEW;
+    }
+    
+    self.isHideFullscreenButtons = [[NSUserDefaults standardUserDefaults]
+                                    boolForKey:CYBERPLAYER_HIDE_FULL_SCREEN_BUTTON];
 
     if (self.topToolbarView) {
         [self.viewsToHideOnIdle addObject:self.topToolbarView];
     }
+    
     if (self.bottomToolbarView) {
         [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
     }
-    
+
+    self.sliderProgress.value = 0;
+
     [self setupActions];
     [self setupCyberPlayer];
     [self setupRemoteCommandCenter];
@@ -196,7 +207,7 @@
             self.pauseButton.enabled = NO;
         }
         
-        if (self.isShowFullscreenExpandAndShrinkButtonsEnabled) {
+        if (!self.isHideFullscreenButtons) {
             if (self.isLandscape) {
                 self.fullscreenExpandButton.hidden = YES;
                 self.fullscreenExpandButton.enabled = NO;
@@ -297,7 +308,7 @@
     
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
-    [self setupPlaybackProgress];
+//    [self setupPlaybackProgress];
 }
 
 @end
@@ -344,8 +355,17 @@
 - (IBAction)play {
     NSLog(@"play cyberPlayer's frame = %@", NSStringFromCGRect(self.cyberPlayer.view.frame));
 
-    [self doPlay];
+    if (![self.videoURL isEqual:self.cyberPlayer.contentURL]) {
+        // old video is still playing
+        if (self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared ||
+            self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying ||
+            self.cyberPlayer.playbackState == CBPMoviePlaybackStatePaused) {
+            [self doStop];
+            [self onStop];
+        }
+    }
     [self startAutoHideTimerCountdown];
+    [self doPlay];
     [self onPlay];
     [self updateNowPlayingInfo];
 }
@@ -355,6 +375,15 @@
     [self stopAutoHideTimerCountdown];
     [self onPause];
     [self updateNowPlayingInfo];
+}
+
+- (void)stop {
+    [self doStop];
+    [self stopAutoHideTimerCountdown];
+    [self syncUI];
+    [self onStop];
+    [self updateNowPlayingInfo];
+    self.videoURL = nil;
 }
 
 - (IBAction)togglePlayPause {
@@ -720,16 +749,26 @@
 }
 
 - (void)setupPlaybackProgress {
-    if ([self.progressTimer isValid]) {
-        [self.progressTimer invalidate];
-        self.progressTimer = nil;
+    // ensure this method is called in main thread.
+    if (![[NSThread currentThread] isMainThread]) {
+        
+        CyberPlayerViewController* __weak welf = self;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [welf setupPlaybackProgress];
+        });
+
+    } else {
+        if ([self.progressTimer isValid]) {
+            [self.progressTimer invalidate];
+            self.progressTimer = nil;
+        }
+        self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                              target:self
+                                                            selector:@selector(updateProgressIndicator:)
+                                                            userInfo:nil
+                                                             repeats:YES];
+        self.sliderProgress.value = 0;
     }
-    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                          target:self
-                                                        selector:@selector(updateProgressIndicator:)
-                                                        userInfo:nil
-                                                         repeats:YES];
-    self.sliderProgress.value = 0;
 }
 
 - (void)resignPlaybackProgress {
@@ -763,19 +802,19 @@
 @end
 
 
-
 @implementation CyberPlayerViewController (PlaybackKitAutoHide)
 
 - (void)startAutoHideTimerCountdown {
     if (self.autoHideTimer.isValid) {
         [self.autoHideTimer invalidate];
     }
-    if (self.isHideControlsOnIdleEnabled) {
-        self.autoHideTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayBeforeHidingViewsOnIdle
-                                                          target:self
-                                                        selector:@selector(hideControls)
-                                                        userInfo:nil
-                                                         repeats:NO];
+    if (!self.isShowControlsOnIdle) {
+        self.autoHideTimer = [NSTimer
+                              scheduledTimerWithTimeInterval:self.delayBeforeHidingViewsOnIdle
+                              target:self
+                              selector:@selector(hideControls)
+                              userInfo:nil
+                              repeats:NO];
     }
 }
 
@@ -812,14 +851,6 @@
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically {
     [self play];
-}
-
-- (void)stop {
-    [self doStop];
-    [self stopAutoHideTimerCountdown];
-    [self syncUI];
-    [self onStop];
-    [self updateNowPlayingInfo];
 }
 
 @end

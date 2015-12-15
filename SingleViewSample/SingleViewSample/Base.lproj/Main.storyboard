@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,11 +16,19 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bCL-ze-9gG">
+                                <rect key="frame" x="83" y="408" width="66" height="41"/>
+                                <color key="backgroundColor" red="0.83185369318181812" green="0.83185369318181812" blue="0.83185369318181812" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="星战"/>
+                                <connections>
+                                    <action selector="buttonStarWar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gNn-nj-8GL"/>
+                                </connections>
+                            </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bb1-1Q-gNw">
-                                <rect key="frame" x="0.0" y="20" width="320" height="180"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="211"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="bb1-1Q-gNw" secondAttribute="height" multiplier="16:9" id="aND-IK-6XC"/>
                                 </constraints>
@@ -27,25 +36,48 @@
                                     <segue destination="tVP-K7-niw" kind="embed" identifier="cyberplayer" id="xnm-ya-YdS"/>
                                 </connections>
                             </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="94p-bS-hGG">
+                                <rect key="frame" x="218" y="408" width="66" height="41"/>
+                                <color key="backgroundColor" red="0.82968355429292928" green="0.82968355429292928" blue="0.82968355429292928" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="41" id="rVw-LX-5tD"/>
+                                    <constraint firstAttribute="width" constant="66" id="uhc-bU-d0O"/>
+                                </constraints>
+                                <state key="normal" title="长江"/>
+                                <connections>
+                                    <action selector="buttonYangziRiver:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yo1-nk-p1e"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="94p-bS-hGG" firstAttribute="width" secondItem="bCL-ze-9gG" secondAttribute="width" id="0NC-F7-kkI"/>
+                            <constraint firstItem="94p-bS-hGG" firstAttribute="leading" secondItem="bCL-ze-9gG" secondAttribute="trailing" constant="69" id="1Vi-vB-MXr"/>
+                            <constraint firstItem="94p-bS-hGG" firstAttribute="height" secondItem="bCL-ze-9gG" secondAttribute="height" id="6Bj-D6-aNc"/>
+                            <constraint firstItem="94p-bS-hGG" firstAttribute="baseline" secondItem="bCL-ze-9gG" secondAttribute="baseline" id="96U-L8-7xL"/>
                             <constraint firstItem="bb1-1Q-gNw" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="EvS-4Z-ibN"/>
+                            <constraint firstItem="bCL-ze-9gG" firstAttribute="top" secondItem="bb1-1Q-gNw" secondAttribute="bottom" constant="177" id="KYK-AO-cu7"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="94p-bS-hGG" secondAttribute="trailing" constant="71" id="Oxe-nH-a7I"/>
                             <constraint firstItem="bb1-1Q-gNw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="bti-3U-Qpj"/>
                             <constraint firstItem="bb1-1Q-gNw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" priority="500" constant="20" id="cxR-QD-fH8"/>
+                            <constraint firstItem="94p-bS-hGG" firstAttribute="centerX" secondItem="bCL-ze-9gG" secondAttribute="centerX" constant="135" id="lgc-8j-a6Z"/>
+                            <constraint firstItem="bCL-ze-9gG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="63" id="qMG-eI-d1b"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bCL-ze-9gG" secondAttribute="bottom" constant="218" id="xKI-Lq-fYg"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="playerContainerView" destination="bb1-1Q-gNw" id="2Eh-dZ-zIN"/>
                         <outlet property="playerContainerViewTopConstraint" destination="cxR-QD-fH8" id="zaA-TQ-883"/>
+                        <outlet property="starWarButton" destination="bCL-ze-9gG" id="Fro-xv-kfd"/>
+                        <outlet property="yangziButton" destination="94p-bS-hGG" id="VPx-Gk-O60"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="600" y="467"/>
+            <point key="canvasLocation" x="599.5" y="466.5"/>
         </scene>
         <!--Cyber Player View Controller-->
         <scene sceneID="yTG-wc-q9R">
@@ -56,7 +88,7 @@
                         <viewControllerLayoutGuide type="bottom" id="PSx-Q4-Lfr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xQg-U2-dYg">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

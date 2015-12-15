@@ -10,12 +10,15 @@
 
 @interface ViewController ()
 
-@property (weak, nonatomic) CyberPlayerViewController* playerViewController;
 @property (weak, nonatomic) IBOutlet UIView *playerContainerView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *playerContainerViewTopConstraint;
 
+@property (weak, nonatomic) IBOutlet UIButton *starWarButton;
+@property (weak, nonatomic) IBOutlet UIButton *yangziButton;
+
 @property (assign, nonatomic) CGRect initPlaybackFrame;
 @property (assign, nonatomic) BOOL isFullscreen;
+@property (weak, nonatomic) CyberPlayerViewController* playerViewController;
 
 @end
 
@@ -27,11 +30,6 @@
     self.isFullscreen = false;
     self.playerViewController.delegate = self;
 
-    NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
-    NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
-    
-    NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
-    self.playerViewController.videoURL = localVideo;
 
 }
 
@@ -51,19 +49,34 @@
 }
 
 
--(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"View Controller: %@", self);
+//-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//    NSLog(@"View Controller: %@", self);
+//    
+//    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+//        NSLog(@"ViewController: Landscape left");
+//    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+//        NSLog(@"ViewController: Landscape right");
+//    } else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) {
+//        NSLog(@"ViewController: Portrait");
+//    } else if (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+//        NSLog(@"ViewController: Upside down");
+//    }
+//    NSLog(@"ViewController frame = %@", NSStringFromCGRect(self.view.frame));
+//}
+
+- (IBAction)buttonStarWar:(id)sender {
     
-    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-        NSLog(@"ViewController: Landscape left");
-    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-        NSLog(@"ViewController: Landscape right");
-    } else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) {
-        NSLog(@"ViewController: Portrait");
-    } else if (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-        NSLog(@"ViewController: Upside down");
-    }
-    NSLog(@"ViewController frame = %@", NSStringFromCGRect(self.view.frame));
+    NSURL* localVideo = [[NSBundle mainBundle] URLForResource:@"Star_Wars" withExtension:@"mp4"];
+    self.playerViewController.videoURL = localVideo;
+
+    [self.playerViewController play];
+}
+
+- (IBAction)buttonYangziRiver:(id)sender {
+    NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
+    NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
+    self.playerViewController.videoURL = remoteVideo;
+    [self.playerViewController play];
 }
 
 @end
@@ -80,6 +93,8 @@
     NSLog(@"before rotation sreen's frame: %@", NSStringFromCGRect(self.playerContainerView.frame));
     
     if (!self.isFullscreen) {
+        self.starWarButton.hidden = YES;
+        self.yangziButton.hidden = YES;
         self.playerContainerViewTopConstraint.constant = 0.0;
         
         self.initPlaybackFrame = self.playerContainerView.frame;
@@ -89,10 +104,8 @@
         // change root view oriention and bounds
         CGRect rect = CGRectMake(0, 0, SCREEN_HEIGHT, SCREEN_WIDTH);
         self.view.bounds = rect;
-        self.view.transform = CGAffineTransformMakeRotation(M_PI_2);;
-        NSLog(@"middle container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
+        self.view.transform = CGAffineTransformMakeRotation(M_PI_2);
         self.playerContainerView.frame = self.view.bounds;
-        NSLog(@"middle container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
         
     } else {
         self.playerContainerViewTopConstraint.constant = 20.0;
@@ -102,6 +115,8 @@
         CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         self.view.bounds = rect;
         [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationPortrait];
+        self.starWarButton.hidden = NO;
+        self.yangziButton.hidden = NO;
     }
     
     self.isFullscreen = !self.isFullscreen;

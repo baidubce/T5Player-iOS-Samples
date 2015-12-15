@@ -5,32 +5,37 @@
 //  Copyright © 2015 Baidu. All rights reserved.
 //
 
-// Configuration of playback kit behavior
-// defaults to NO
-#define CYBERPLAYER_BACKGROUND_PLAYBACK_ENABLE  @"cyberplayer.isBackgroundPlaybackEnabled"
+/*
+ * Bool value indicate whether to show control after some idle time
+ * defaults value is NO
+ */
+#define CYBERPLAYER_SHOW_CONTROLS_ON_IDLE @"cyberplayer.isShowControlsOnIdle"
 
-// defaults to 3 seconds
-#define CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW_ON_IDLE @"cyberplayer.delayBeforeHidingViewsOnIdle";
+/*
+ * Double value indicate the idle time in seconds before hiding control kits
+ * defaults value is 3 seconds
+ */
+#define CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW @"cyberplayer.delayBeforeHidingViewsOnIdle"
 
-// defaults to YES
-#define CYBERPLAYER_FULL_SCREEN_EXPAND_SHRINK_BUTTON_ENABLE @"cyberplayer.isShowFullscreenExpandAndShrinkButtonsEnabled"
+#define CYBERPLAYER_DEFAULT_DELAY_BEFORE_HIDING_VIEW 3.0
 
-// defaults to YES
-#define CYBERPLAYER_HIDE_CONTROLS_ON_IDLE @"cyberplayer.isHideControlsOnIdleEnabled"
+/*
+ * Bool value indicate whether to hide FullScreen Expand and Shrink button
+ * defaults value is NO
+ */
+#define CYBERPLAYER_HIDE_FULL_SCREEN_BUTTON @"cyberplayer.isHideFullscreenButtons"
 
+/*
+ * String value indicate Access Key which BCE generats for each account
+ */
 #define CYBERPLAYER_ACCESS_KEY @"cyberplayer.AccessKey"
 
+/*
+ * String value indicate Nib file names which defines the layout of cyberplayer control kit
+ */
 #define CYBERPLAYER_NIB_FILE_NAME @"cyberplayer.nibfilename"
 
-#pragma mark - UI Macro
 
-#define SCREEN_HEIGHT                    MAX([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
-#define SCREEN_WIDTH                     MIN([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
-#define Screen35in                      (SCREEN_HEIGHT==480)
-#define Screen40in                      (SCREEN_HEIGHT==568)
-#define Screen47in                      (SCREEN_HEIGHT==667)
-#define Screen55in                      (SCREEN_HEIGHT==736)
-#define iPad                            (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-#define iPadPro                         ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && (ScreenHeight==1366))
+
 
 

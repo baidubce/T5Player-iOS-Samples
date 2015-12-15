@@ -15,6 +15,18 @@
 #import "TimeFormatter.h"
 #import "CyberPlayerSettings.h"
 
+#pragma mark - UI Macro
+
+#define SCREEN_HEIGHT                    MAX([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_WIDTH                     MIN([[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_35in                      (SCREEN_HEIGHT==480)
+#define SCREEN_40in                      (SCREEN_HEIGHT==568)
+#define SCREEN_47in                      (SCREEN_HEIGHT==667)
+#define SCREEN_55in                      (SCREEN_HEIGHT==736)
+#define iPad                            (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define iPadPro                         ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && (SCREEN_HEIGHT==1366))
+
+
 @interface CyberPlayerViewController : UIViewController
 
 // Interface Builder Outlets
@@ -39,14 +51,12 @@
 @property (strong, nonatomic) CyberPlayerController* cyberPlayer;
 
 // Configuration of playback kit behavior
-// defaults to NO
-@property (assign, nonatomic) BOOL isBackgroundPlaybackEnabled;
 // defaults to 3 seconds
 @property (assign, nonatomic) NSTimeInterval delayBeforeHidingViewsOnIdle;
 // defaults to YES
-@property (assign, nonatomic) BOOL isShowFullscreenExpandAndShrinkButtonsEnabled;
+@property (assign, nonatomic) BOOL isHideFullscreenButtons;
 // defaults to YES
-@property (assign, nonatomic) BOOL isHideControlsOnIdleEnabled;
+@property (assign, nonatomic) BOOL isShowControlsOnIdle;
 
 @property (strong, nonatomic) NSURL *videoURL;
 
@@ -59,7 +69,6 @@
 @interface CyberPlayerViewController (PlaybackAPI)
 
 - (void)prepareAndPlayAutomatically:(BOOL)playAutomatically;
-- (void)stop;
 
 @end
 
@@ -71,6 +80,7 @@
 - (IBAction)play;
 - (IBAction)pause;
 - (IBAction)togglePlayPause;
+- (IBAction)stop;
 - (IBAction)seek:(UISlider *)slider;
 - (IBAction)startSeeking:(id)sender;
 - (IBAction)endSeeking:(id)sender;
