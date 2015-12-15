@@ -16,9 +16,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *starWarButton;
 @property (weak, nonatomic) IBOutlet UIButton *yangziButton;
 
+@property (weak, nonatomic) CyberPlayerViewController* playerViewController;
+
 @property (assign, nonatomic) CGRect initPlaybackFrame;
 @property (assign, nonatomic) BOOL isFullscreen;
-@property (weak, nonatomic) CyberPlayerViewController* playerViewController;
 
 @end
 
@@ -30,7 +31,10 @@
     self.isFullscreen = false;
     self.playerViewController.delegate = self;
 
+}
 
+- (BOOL) prefersStatusBarHidden {
+    return self.isFullscreen;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -39,30 +43,6 @@
         [self.playerViewController initWithUserDefaults];
     }
 }
-
--(BOOL) shouldAutorotate {
-    return YES;
-}
-
--(UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAllButUpsideDown;
-}
-
-
-//-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//    NSLog(@"View Controller: %@", self);
-//    
-//    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-//        NSLog(@"ViewController: Landscape left");
-//    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//        NSLog(@"ViewController: Landscape right");
-//    } else if (toInterfaceOrientation == UIInterfaceOrientationPortrait) {
-//        NSLog(@"ViewController: Portrait");
-//    } else if (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-//        NSLog(@"ViewController: Upside down");
-//    }
-//    NSLog(@"ViewController frame = %@", NSStringFromCGRect(self.view.frame));
-//}
 
 - (IBAction)buttonStarWar:(id)sender {
     
@@ -125,10 +105,6 @@
 
 }
 
--(BOOL) prefersStatusBarHidden {
-    return self.isFullscreen;
-}
-
 /*
  Provide now playing info like this:
  [nowPlayingInfo setObject:track.artistName forKey:MPMediaItemPropertyArtist];
@@ -137,8 +113,6 @@
 - (void)playerGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo {
     NSLog(@"playerGatherNowPlayingInfo : %@", nowPlayingInfo);
 }
-
-
 - (void)playerFailedToLoadAssetWithError:(NSError *)error {
     NSLog(@"playerFailedToLoadAssetWithError : %@", error);
 }

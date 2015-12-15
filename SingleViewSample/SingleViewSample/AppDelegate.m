@@ -20,10 +20,7 @@
     // Override point for customization after application launch.
     NSLog(@"Screen size: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
     NSDictionary* cyberplayerConfiguration = @{
-//                                       CYBERPLAYER_SHOW_CONTROLS_ON_IDLE : @YES,
-//                                    CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW : @3.0,
-//                                     CYBERPLAYER_HIDE_FULL_SCREEN_BUTTON : @YES,
-                                               CYBERPLAYER_NIB_FILE_NAME : @"CyberPlayerInterface_simple",
+                                               CYBERPLAYER_NIB_FILE_NAME : @"CyberPlayerInterface",
                                                   CYBERPLAYER_ACCESS_KEY : @"9ea040b91e974376a28367f23721e6fb"
                                                };
     
