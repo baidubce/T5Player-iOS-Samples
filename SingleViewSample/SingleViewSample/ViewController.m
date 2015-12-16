@@ -69,8 +69,6 @@
  If you don't want to support fullscreen please provide custom user interface which does not have fullscreenExpandButton and fullscreenShrinkButton, or hide the buttons in default user interface.
  */
 - (void)playerToggleFullscreen {
-    NSLog(@"playerToggleFullscreen");
-    NSLog(@"before rotation sreen's frame: %@", NSStringFromCGRect(self.playerContainerView.frame));
     
     if (!self.isFullscreen) {
         self.starWarButton.hidden = YES;
@@ -79,7 +77,7 @@
         
         self.initPlaybackFrame = self.playerContainerView.frame;
         [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight];
-        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
         
         // change root view oriention and bounds
         CGRect rect = CGRectMake(0, 0, SCREEN_HEIGHT, SCREEN_WIDTH);
@@ -89,7 +87,6 @@
         
     } else {
         self.playerContainerViewTopConstraint.constant = 20.0;
-        
         self.playerContainerView.frame = self.initPlaybackFrame;
         self.view.transform = CGAffineTransformIdentity;
         CGRect rect = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -97,11 +94,11 @@
         [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationPortrait];
         self.starWarButton.hidden = NO;
         self.yangziButton.hidden = NO;
+        
     }
     
     self.isFullscreen = !self.isFullscreen;
     [self setNeedsStatusBarAppearanceUpdate];
-    NSLog(@"after container view frame: %@ \n", NSStringFromCGRect(self.playerContainerView.frame));
 
 }
 

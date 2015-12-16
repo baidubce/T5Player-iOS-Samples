@@ -7,8 +7,6 @@
 #import "CyberPlayerViewController.h"
 
 @interface CyberPlayerViewController ()
-{
-}
 
 #pragma mark - Player Engine properties
 
@@ -32,6 +30,7 @@
 // has topToolbarView and bottomToolbarView by default
 @property (strong, nonatomic) NSMutableArray *viewsToHideOnIdle;
 
+@property(strong, nonatomic) NSCondition* stopCondition;
 /*
  * Sync playback state with GUI.
  * This method must be called in main thread.
@@ -60,30 +59,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // set default configuration properties before loading nib
-    _viewsToHideOnIdle = [[NSMutableArray alloc] init];
-
-    self.isShowControlsOnIdle = [[NSUserDefaults standardUserDefaults]
-                                 boolForKey:CYBERPLAYER_SHOW_CONTROLS_ON_IDLE];
-    
-    self.delayBeforeHidingViewsOnIdle =  [[NSUserDefaults standardUserDefaults]
-                                          doubleForKey: CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW];
-    if (self.delayBeforeHidingViewsOnIdle < 0.1) {
-        self.delayBeforeHidingViewsOnIdle = CYBERPLAYER_DEFAULT_DELAY_BEFORE_HIDING_VIEW;
-    }
-    
-    self.isHideFullscreenButtons = [[NSUserDefaults standardUserDefaults]
-                                    boolForKey:CYBERPLAYER_HIDE_FULL_SCREEN_BUTTON];
-
-    if (self.topToolbarView) {
-        [self.viewsToHideOnIdle addObject:self.topToolbarView];
-    }
-    
-    if (self.bottomToolbarView) {
-        [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
-    }
-
     self.sliderProgress.value = 0;
+    self.stopCondition = [[NSCondition alloc] init];
 
     [self setupActions];
     [self setupCyberPlayer];
@@ -91,6 +68,38 @@
     [self registerGestureRecognizer];
     [self addConstraints];
     [self syncUI];
+    [self loadUserDefaults];
+}
+
+- (void)loadUserDefaults {
+    // set default configuration properties after loading nib
+    self.viewsToHideOnIdle = [[NSMutableArray alloc] init];
+    NSUserDefaults* userSettings = [NSUserDefaults standardUserDefaults];
+    self.isShowControlsOnIdle = [userSettings boolForKey:CYBERPLAYER_SHOW_CONTROLS_ON_IDLE];
+    
+    self.delayBeforeHidingViewsOnIdle =  [userSettings doubleForKey: CYBERPLAYER_DELAY_BEFORE_HIDING_VIEW];
+    if (self.delayBeforeHidingViewsOnIdle < 0.1) {
+        self.delayBeforeHidingViewsOnIdle = CYBERPLAYER_DEFAULT_DELAY_BEFORE_HIDING_VIEW;
+    }
+    
+    self.isHideFullscreenButtons = [userSettings boolForKey:CYBERPLAYER_HIDE_FULL_SCREEN_BUTTON];
+    
+    if (self.topToolbarView) {
+        [self.viewsToHideOnIdle addObject:self.topToolbarView];
+    }
+    
+    if (self.bottomToolbarView) {
+        [self.viewsToHideOnIdle addObject:self.bottomToolbarView];
+    }
+    
+    if ([userSettings objectForKey:CYBERPLAYER_SCALING_MODE]) {
+        self.cyberPlayer.scalingMode = [userSettings integerForKey:CYBERPLAYER_SCALING_MODE];
+    } else {
+        self.cyberPlayer.scalingMode = CBPMovieScalingModeAspectFit;
+    }
+    
+    self.cyberPlayer.accurateSeeking = [userSettings boolForKey:CYBERPLAYER_ACCURATE_SEEK];
+    self.cyberPlayer.shouldAutoClearRender = [userSettings boolForKey:CYBERPLAYER_SHOULD_CLEAR_RENDER];
 }
 
 - (void)addConstraints {
@@ -140,10 +149,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    // stop playback, save current time,
-    // unregister notification, KVO,
-    //
-    NSLog(@"CyberPlayerViewController viewWillDisappear(), \n %@", [NSThread callStackSymbols]);
+
     [self resignNotifications];
     [self stop];
     [self resignPlaybackProgress];
@@ -153,7 +159,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"CyberPlayerViewController dealloc(), \n %@", [NSThread callStackSymbols]);
+
     [self resignNotifications];
     [self resignRemoteCommandCenter];
     [self resignPlaybackProgress];
@@ -172,10 +178,9 @@
     // ensure this method is called in main thread.
     if (![[NSThread currentThread] isMainThread]) {
         CyberPlayerViewController* __weak welf = self;
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [welf syncUI];
         });
-        
     } else {
         if ([self isPlaying]) {
             if (self.isSeeking) {
@@ -263,6 +268,7 @@
                 break;
         }
     }
+
 }
 
 - (void) doPause {
@@ -308,7 +314,6 @@
     
     [self.view insertSubview:self.cyberPlayer.view aboveSubview:self.backgroundView];
 
-//    [self setupPlaybackProgress];
 }
 
 @end
@@ -352,22 +357,50 @@
 
 }
 
-- (IBAction)play {
-    NSLog(@"play cyberPlayer's frame = %@", NSStringFromCGRect(self.cyberPlayer.view.frame));
-
-    if (![self.videoURL isEqual:self.cyberPlayer.contentURL]) {
+- (BOOL) needStopPreviousVideo {
+    if (self.cyberPlayer.contentURL == nil && self.cyberPlayer.contentString == nil) {
+        return NO;
+    }
+    
+    if( ![self.videoURL isEqual:self.cyberPlayer.contentURL]) {
         // old video is still playing
         if (self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared ||
             self.cyberPlayer.playbackState == CBPMoviePlaybackStatePlaying ||
             self.cyberPlayer.playbackState == CBPMoviePlaybackStatePaused) {
-            [self doStop];
-            [self onStop];
+            return YES;
         }
     }
+    return NO;
+}
+- (IBAction)play {
     [self startAutoHideTimerCountdown];
-    [self doPlay];
-    [self onPlay];
-    [self updateNowPlayingInfo];
+    if (self.videoURL == nil) {
+        return;
+    }
+    
+    if ([self needStopPreviousVideo]) {
+        [self doStop];
+        [self onStop];
+        dispatch_queue_t q = dispatch_queue_create("waitUntilPlaybackStopped", NULL);
+        CyberPlayerViewController* __weak welf = self;
+        
+        dispatch_async(q, ^{
+            // wait until stop operation complete
+            [welf.stopCondition lock];
+            while (welf.cyberPlayer.playbackState != CBPMoviePlaybackStateStopped
+                   && welf.cyberPlayer.playbackState != CBPMoviePlaybackStateInterrupted) {
+                [welf.stopCondition wait];
+            }
+            [welf.stopCondition unlock];
+            [welf performSelectorOnMainThread:@selector(play) withObject:nil waitUntilDone:NO];
+        });
+        
+    } else {
+        [self doPlay];
+        [self onPlay];
+        [self updateNowPlayingInfo];
+
+    }
 }
 
 - (IBAction)pause {
@@ -424,17 +457,6 @@
 }
 
 - (IBAction)toggleFullscreen:(id)sender {
-    // change to fullscreen
-//    if (self.isFullscreen) {
-//        NSLog(@"Change back to frame: %@", NSStringFromCGRect(self.initialFrame));
-//        self.view.frame = self.initialFrame;
-//    } else {
-//        CGRect frame = [UIScreen mainScreen].bounds;
-//        NSLog(@"Change to full screen frame: %@", NSStringFromCGRect(frame));
-//        self.view.frame = frame;
-//    }
-//    _isFullscreen = !_isFullscreen;
-    // change back
     [self onToggleFullscreen];
     [self syncUI];
     [self startAutoHideTimerCountdown];
@@ -475,7 +497,6 @@
         || self.cyberPlayer.playbackState == CBPMoviePlaybackStatePrepared) {
         result = self.cyberPlayer.currentPlaybackTime;
     }
-    
     return result;
 }
 
@@ -487,7 +508,6 @@
    return UIInterfaceOrientationIsLandscape(
                     [[UIApplication sharedApplication] statusBarOrientation]);
 }
-
 @end
 
 
@@ -560,17 +580,6 @@
                                              selector:@selector(onCBPUOnSniffErrorNotification:)
                                                  name:CBPUOnSniffErrorNotification
                                                object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleEnteredBackground:)
-//                                                 name:UIApplicationDidEnterBackgroundNotification
-//                                               object:nil];
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleEnteredBackground:)
-//                                                 name:UIApplicationDidEnterBackgroundNotification
-//                                               object:nil];
-
 }
 
 - (void)resignNotifications {
@@ -586,76 +595,105 @@
 
 // On play quality
 - (void) onCyberPlayerGotPlayQualityNotification: (NSNotification*)notification {
-//    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %li",
-//          notification, self.cyberPlayer.playbackState);
+#ifdef __DEBUG__
+    NSLog(@"onCyberPlayerGotPlayQualityNotification: %@, CyberPlayer's status = %li",
+          notification, self.cyberPlayer.playbackState);
+#endif
 }
 
 // On Network Bitrate
 - (void) onCyberPlayerGotNetworkBitrateNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerGotNetworkBitrateNotification: %@, CyberPlayer's status = %li", notification, (long)self.cyberPlayer.playbackState);
+#endif
 }
 
 // Ready to play
 - (void) onCyberPlayerLoadDidPreparedNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerLoadDidPreparedNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
     [self setupPlaybackProgress];
     [self syncUI];
 }
 
 // Finish playing
 - (void) onCyberPlayerPlaybackDidFinishNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerPlaybackDidFinishNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
     [self resignPlaybackProgress];
     [self syncUI];
+    self.cyberPlayer.contentString = nil;
+    self.cyberPlayer.contentURL = nil;
+    [self.stopCondition lock];
+    [self.stopCondition signal];
+    [self.stopCondition unlock];
 }
 
 // On error
 - (void) onCyberPlayerPlaybackErrorNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerPlaybackErrorNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
     [self syncUI];
 }
 
 // Playback status is changed
 - (void) onCyberPlayerPlaybackStateDidChangeNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerPlaybackStateDidChangeNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
     [self syncUI];
 }
 
 // Only Audio
 - (void) onCyberPlayerMeidaTypeAudioOnlyNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerMeidaTypeAudioOnlyNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
 }
 
 // Seek Finished
 - (void) onCyberPlayerSeekingDidFinishNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerSeekingDidFinishNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
     self.isSeeking = NO;
     [self syncUI];
 }
 
 // Begin Caching
 - (void) onCyberPlayerStartCachingNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerStartCachingNotification: %@, CyberPlayer's status = %li",
           notification, self.cyberPlayer.playbackState);
+#endif
 }
 
 // On Cache Percent
 - (void) onCyberPlayerGotCachePercentNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCyberPlayerGotCachePercentNotification: %@, CyberPlayer's status = %li", notification, self.cyberPlayer.playbackState);
+#endif
 }
 
 - (void) onCBPUOnSniffCompletionNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCBPUOnSniffCompletionNotification: %@", notification);
+#endif
 }
 
 - (void) onCBPUOnSniffErrorNotification: (NSNotification*)notification {
+#ifdef __DEBUG__
     NSLog(@"onCBPUOnSniffErrorNotification: %@", notification);
+#endif
 }
 
 @end
@@ -729,7 +767,6 @@
         [self.delegate playerGatherNowPlayingInfo:nowPlayingInfo];
     }
 }
-
 @end
 
 
@@ -753,7 +790,7 @@
     if (![[NSThread currentThread] isMainThread]) {
         
         CyberPlayerViewController* __weak welf = self;
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [welf setupPlaybackProgress];
         });
 
