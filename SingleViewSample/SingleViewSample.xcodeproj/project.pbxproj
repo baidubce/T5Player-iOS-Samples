@@ -42,6 +42,7 @@
 		02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02583AED1C0C910100649671 /* MobileCoreServices.framework */; };
 		0269E64C1C102D420011509F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64B1C102D420011509F /* libz.tbd */; };
 		0269E64E1C102E700011509F /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64D1C102E700011509F /* libbz2.1.0.tbd */; };
+		0278F4301C253DA50011E564 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0278F42F1C253DA50011E564 /* SystemConfiguration.framework */; };
 		02F342871C1C3476006614BF /* CyberPlayerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F342861C1C3476006614BF /* CyberPlayerButton.m */; };
 /* End PBXBuildFile section */
 
@@ -112,6 +113,7 @@
 		02583AED1C0C910100649671 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0269E64B1C102D420011509F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		0269E64D1C102E700011509F /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
+		0278F42F1C253DA50011E564 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		02F342851C1C3476006614BF /* CyberPlayerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerButton.h; path = PlaybackKit/src/CyberPlayerButton.h; sourceTree = "<group>"; };
 		02F342861C1C3476006614BF /* CyberPlayerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CyberPlayerButton.m; path = PlaybackKit/src/CyberPlayerButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0278F4301C253DA50011E564 /* SystemConfiguration.framework in Frameworks */,
 				0269E64E1C102E700011509F /* libbz2.1.0.tbd in Frameworks */,
 				0269E64C1C102D420011509F /* libz.tbd in Frameworks */,
 				02583AEE1C0C910100649671 /* MobileCoreServices.framework in Frameworks */,
@@ -289,6 +292,7 @@
 		02583AEF1C0C911400649671 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0278F42F1C253DA50011E564 /* SystemConfiguration.framework */,
 				0269E64D1C102E700011509F /* libbz2.1.0.tbd */,
 				0269E64B1C102D420011509F /* libz.tbd */,
 				02583AED1C0C910100649671 /* MobileCoreServices.framework */,
@@ -363,6 +367,7 @@
 				TargetAttributes = {
 					02583A6D1C0BF6C700649671 = {
 						CreatedOnToolsVersion = 7.1.1;
+						DevelopmentTeam = 7466X8V7ET;
 					};
 					02583A861C0BF6C700649671 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -585,7 +590,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Hu Dapeng (R6P52ANYND)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SingleViewSample/Info.plist;
@@ -605,7 +610,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Hu Dapeng (R6P52ANYND)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SingleViewSample/Info.plist;
