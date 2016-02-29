@@ -53,7 +53,7 @@
 }
 
 - (IBAction)buttonYangziRiver:(id)sender {
-    NSString* videoAddress = @"http://txj-bucket.bj.bcebos.com/hls/test_commonkey.m3u8";
+    NSString* videoAddress = @"http://media.bos.qasandbox.bcetest.baidu.com/yaya2015.m3u8";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
     self.playerViewController.videoURL = remoteVideo;
     [self.playerViewController play];
