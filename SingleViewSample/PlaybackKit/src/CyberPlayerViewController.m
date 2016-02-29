@@ -248,8 +248,9 @@
             case CBPMoviePlaybackStateStopped:
             case CBPMoviePlaybackStateInterrupted:
                 self.cyberPlayer.contentURL = self.videoURL;
+                self.cyberPlayer.accurateSeeking = YES;
                 self.cyberPlayer.shouldAutoplay = YES;
-                
+                self.cyberPlayer.initialPlaybackTime = 20.0;
                 [self.cyberPlayer prepareToPlay];
                 [self.activityIndicatorView startAnimating];
                 [self syncUI];
@@ -580,6 +581,12 @@
                                              selector:@selector(onCBPUOnSniffErrorNotification:)
                                                  name:CBPUOnSniffErrorNotification
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onCurrentPosition:)
+                                                 name:CyberPlayerCurrentPositionNotification
+                                               object:nil];
+    
 }
 
 - (void)resignNotifications {
@@ -696,6 +703,11 @@
 #endif
 }
 
+- (void) onCurrentPosition:(NSNotification*)notification {
+        NSLog(@"============ onCurrentPosition: %@ =============", notification.object);
+}
+
+
 @end
 
 
@@ -777,8 +789,10 @@
     if (self.isSeeking) {
         return;
     }
+    
     NSTimeInterval currentTime = self.cyberPlayer.currentPlaybackTime;
     NSTimeInterval allSecond = self.cyberPlayer.duration;
+    NSLog(@"updateProgressIndicator:  currentTime = %f, allSecond = %f", currentTime, allSecond );
 
     self.currentTimeLabel.text = [TimeFormatter convertSecond2HHMMSS:currentTime];
     self.remainingTimeLabel.text = [TimeFormatter convertSecond2HHMMSS:allSecond - currentTime];

@@ -27,10 +27,10 @@ CBP_EXTERN NSString * const CyberPlayerMeidaTypeAudioOnlyNotification;
 CBP_EXTERN NSString * const CyberPlayerGotPlayQualityNotification;
 CBP_EXTERN NSString * const CyberPlayerGotAVSyncDiffNotification;
 CBP_EXTERN NSString * const CyberPlayerGotNetworkBitrateNotification;
+CBP_EXTERN NSString * const CyberPlayerCurrentPositionNotification;
 
 CBP_EXTERN NSString * const CBPUOnSniffCompletionNotification;
 CBP_EXTERN NSString * const CBPUOnSniffErrorNotification;
-
 
 enum {
     CBPMovieScalingModeNone,       // 无缩放
@@ -586,6 +586,12 @@ typedef NSInteger CBPErrorCode;
  @since Available in CyberPlayerController 1.2 and later.
  */
 @property(nonatomic)            BOOL accuratePostion;
+/**
+ @abstract 缓存的时候，播放器会暂停一段时间。此参数定义暂停的时长，以秒为单位。默认值为1秒
+ @discussion 播放直播视频场景下，带宽高的时候，建议降低缓存以降低延迟；带宽低的时候，提高缓存以提高播放流畅度。
+ @since Available in CyberPlayerController 1.3.13 and later.
+ */
+@property(nonatomic, assign)  float cachePauseTimeInSeconds;
 
 @end
 #endif

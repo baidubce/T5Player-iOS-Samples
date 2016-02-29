@@ -43,6 +43,7 @@
 		0269E64C1C102D420011509F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64B1C102D420011509F /* libz.tbd */; };
 		0269E64E1C102E700011509F /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0269E64D1C102E700011509F /* libbz2.1.0.tbd */; };
 		0278F4301C253DA50011E564 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0278F42F1C253DA50011E564 /* SystemConfiguration.framework */; };
+		029CF67C1C7F007900A32161 /* DroidSansFallback.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 029CF67B1C7F007900A32161 /* DroidSansFallback.ttf */; };
 		02F342871C1C3476006614BF /* CyberPlayerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F342861C1C3476006614BF /* CyberPlayerButton.m */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +115,7 @@
 		0269E64B1C102D420011509F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		0269E64D1C102E700011509F /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
 		0278F42F1C253DA50011E564 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		029CF67B1C7F007900A32161 /* DroidSansFallback.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = DroidSansFallback.ttf; path = CyberPlayer/DroidSansFallback.ttf; sourceTree = "<group>"; };
 		02F342851C1C3476006614BF /* CyberPlayerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CyberPlayerButton.h; path = PlaybackKit/src/CyberPlayerButton.h; sourceTree = "<group>"; };
 		02F342861C1C3476006614BF /* CyberPlayerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CyberPlayerButton.m; path = PlaybackKit/src/CyberPlayerButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -276,6 +278,7 @@
 		02583ADC1C0C8BB900649671 /* CyberPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				029CF67B1C7F007900A32161 /* DroidSansFallback.ttf */,
 				02583ADD1C0C8BCB00649671 /* CyberPlayerController.h */,
 				02583AEC1C0C8C1E00649671 /* CyberplayerUtils.h */,
 				02583ADE1C0C8C0100649671 /* libASIHTTP.a */,
@@ -417,6 +420,7 @@
 				02583ABD1C0BFDBB00649671 /* videoplayer_play@3x.png in Resources */,
 				02583ABF1C0BFDBB00649671 /* videoplayer_shrink@2x.png in Resources */,
 				02583A811C0BF6C700649671 /* LaunchScreen.storyboard in Resources */,
+				029CF67C1C7F007900A32161 /* DroidSansFallback.ttf in Resources */,
 				02583AC01C0BFDBB00649671 /* videoplayer_shrink@3x.png in Resources */,
 				02583A7E1C0BF6C700649671 /* Assets.xcassets in Resources */,
 				02583AB91C0BFDBB00649671 /* videoplayer_pause@2x.png in Resources */,
