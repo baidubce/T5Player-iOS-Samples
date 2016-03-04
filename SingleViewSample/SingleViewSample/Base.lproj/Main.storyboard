@@ -42,7 +42,7 @@
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="94p-bS-hGG">
                                 <rect key="frame" x="218" y="518" width="82" height="42"/>
                                 <color key="backgroundColor" red="0.82968355429292928" green="0.82968355429292928" blue="0.82968355429292928" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="长江"/>
+                                <state key="normal" title="念你"/>
                                 <connections>
                                     <action selector="buttonYangziRiver:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yo1-nk-p1e"/>
                                 </connections>

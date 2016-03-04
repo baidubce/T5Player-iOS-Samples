@@ -704,7 +704,7 @@
 }
 
 - (void) onCurrentPosition:(NSNotification*)notification {
-        NSLog(@"============ onCurrentPosition: %@ =============", notification.object);
+//        NSLog(@"============ onCurrentPosition: %@ =============", notification.object);
 }
 
 
