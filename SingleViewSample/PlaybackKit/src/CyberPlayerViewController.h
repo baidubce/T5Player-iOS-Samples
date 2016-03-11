@@ -172,17 +172,10 @@
 #pragma mark - methods about dispatch delegation
 @interface CyberPlayerViewController (DelegateInvocation)
 
-- (void)onFailedToLoadAssetWithError:(NSError*)error;
 - (void)onPlay;
 - (void)onPause;
 - (void)onStop;
-- (void)onDidPlayToEndTime;
-- (void)onFailedToPlayToEndTime;
-- (void)onRequireNextTrack;
-- (void)onRequirePreviousTrack;
 - (void)onToggleFullscreen;
-- (void)onPlaybackStalled;
-- (void)onGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo;
 
 
 @end

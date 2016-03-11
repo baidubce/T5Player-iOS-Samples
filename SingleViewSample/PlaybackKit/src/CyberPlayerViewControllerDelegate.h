@@ -10,18 +10,11 @@
 
 @optional
 
-- (void)playerFailedToLoadAssetWithError:(NSError *)error;
 - (void)playerDidPlay;
+
 - (void)playerDidPause;
+
 - (void)playerDidStop;
-- (void)playerDidPlayToEndTime;
-- (void)playerFailedToPlayToEndTime;
-- (void)playerPlaybackStalled;
-- (void)playerDoneButtonTouched;
-
-
-- (void)playerRequireNextTrack;
-- (void)playerRequirePreviousTrack;
 
 /*
  Check isFullscreen property and animate view controller's view appropriately.
@@ -29,10 +22,4 @@
  */
 - (void)playerToggleFullscreen;
 
-/*
- Provide now playing info like this:
- [nowPlayingInfo setObject:track.artistName forKey:MPMediaItemPropertyArtist];
- [nowPlayingInfo setObject:track.trackTitle forKey:MPMediaItemPropertyTitle];
- */
-- (void)playerGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo;
 @end

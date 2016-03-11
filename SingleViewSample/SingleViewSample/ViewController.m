@@ -56,6 +56,7 @@
     NSString* videoAddress = @"http://media.bos.qasandbox.bcetest.baidu.com/yaya2015.m3u8";
     NSURL* remoteVideo = [[NSURL alloc] initWithString:videoAddress];
     self.playerViewController.videoURL = remoteVideo;
+    [self.playerViewController.cyberPlayer setLogLevel:5];
     [self.playerViewController play];
 }
 
@@ -107,12 +108,6 @@
  [nowPlayingInfo setObject:track.artistName forKey:MPMediaItemPropertyArtist];
  [nowPlayingInfo setObject:track.trackTitle forKey:MPMediaItemPropertyTitle];
  */
-- (void)playerGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo {
-    NSLog(@"playerGatherNowPlayingInfo : %@", nowPlayingInfo);
-}
-- (void)playerFailedToLoadAssetWithError:(NSError *)error {
-    NSLog(@"playerFailedToLoadAssetWithError : %@", error);
-}
 - (void)playerDidPlay {
     NSLog(@"playerDidPlay");
 }
@@ -121,24 +116,6 @@
 }
 - (void)playerDidStop {
     NSLog(@"playerDidStop");
-}
-- (void)playerDidPlayToEndTime {
-    NSLog(@"playerDidPlayToEndTime");
-}
-- (void)playerFailedToPlayToEndTime {
-    NSLog(@"playerFailedToPlayToEndTime");
-}
-- (void)playerPlaybackStalled {
-    NSLog(@"playerPlaybackStalled");
-}
-- (void)playerDoneButtonTouched {
-    NSLog(@"playerDoneButtonTouched");
-}
-- (void)playerRequireNextTrack {
-    NSLog(@"playerRequireNextTrack");
-}
-- (void)playerRequirePreviousTrack {
-    NSLog(@"playerRequirePreviousTrack");
 }
 @end
 

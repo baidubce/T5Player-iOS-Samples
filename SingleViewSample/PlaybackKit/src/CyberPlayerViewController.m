@@ -714,12 +714,6 @@
 
 @implementation CyberPlayerViewController (DelegateInvocation)
 
-- (void)onFailedToLoadAssetWithError:(NSError*)error {
-    if ([self.delegate respondsToSelector:@selector(playerFailedToLoadAssetWithError:)]) {
-        [self.delegate playerFailedToLoadAssetWithError:error];
-    }
-}
-
 - (void)onPlay {
     if ([self.delegate respondsToSelector:@selector(playerDidPlay)]) {
         [self.delegate playerDidPlay];
@@ -738,47 +732,12 @@
     }
 }
 
-- (void)onDidPlayToEndTime {
-    if ([self.delegate respondsToSelector:@selector(playerDidPlayToEndTime)]) {
-        [self.delegate playerDidPlayToEndTime];
-    }
-}
-
-- (void)onFailedToPlayToEndTime {
-    if ([self.delegate respondsToSelector:@selector(playerFailedToPlayToEndTime)]) {
-        [self.delegate playerFailedToPlayToEndTime];
-    }
-}
-
-- (void)onRequireNextTrack {
-    if ([self.delegate respondsToSelector:@selector(playerRequireNextTrack)]) {
-        [self.delegate playerRequireNextTrack];
-    }
-}
-
-- (void)onRequirePreviousTrack {
-    if ([self.delegate respondsToSelector:@selector(playerRequirePreviousTrack)]) {
-        [self.delegate playerRequirePreviousTrack];
-    }
-}
-
 - (void)onToggleFullscreen {
     if ([self.delegate respondsToSelector:@selector(playerToggleFullscreen)]) {
         [self.delegate playerToggleFullscreen];
     }
 }
 
-- (void)onPlaybackStalled {
-    if ([self.delegate respondsToSelector:@selector(playerPlaybackStalled)]) {
-        [self.delegate playerPlaybackStalled];
-    }
-}
-
-- (void)onGatherNowPlayingInfo:(NSMutableDictionary *)nowPlayingInfo {
-    if ([self.delegate respondsToSelector:@selector(playerGatherNowPlayingInfo:)]) {
-        [self.delegate playerGatherNowPlayingInfo:nowPlayingInfo];
-    }
-}
 @end
 
 
@@ -945,10 +904,6 @@
             [self pause];
         } else if (event.subtype == UIEventSubtypeRemoteControlTogglePlayPause) {
             [self togglePlayPause];
-        } else if (event.subtype == UIEventSubtypeRemoteControlNextTrack) {
-            [self onRequireNextTrack];
-        } else if (event.subtype == UIEventSubtypeRemoteControlPreviousTrack) {
-            [self onRequirePreviousTrack];
         }
     }
 }
